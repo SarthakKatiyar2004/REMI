@@ -1,4 +1,4 @@
-##REMI
+#REMI
 
 REMI (Really Minimal Editor) is a simple text-based editor written in C using GTK+ 3 library
 
