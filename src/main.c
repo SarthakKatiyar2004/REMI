@@ -11,11 +11,20 @@ int main(int argc, char *argv[]){
 
 	GtkTextBuffer *buffer = gtk_text_buffer_new(NULL);
 
+	GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL,NULL);
+
+	gtk_scrolled_window_set_policy(
+		GTK_SCROLLED_WINDOW(scrolled_window),
+		GTK_POLICY_AUTOMATIC,
+		GTK_POLICY_AUTOMATIC
+	);
+
 	GtkWidget *text_view = gtk_text_view_new_with_buffer(buffer);
 
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(text_view), GTK_WRAP_WORD_CHAR);
 
-	gtk_container_add(GTK_CONTAINER(window), text_view);
+	gtk_container_add(GTK_CONTAINER(scrolled_window), text_view);
+	gtk_container_add(GTK_CONTAINER(window), scrolled_window);
 
 	gtk_widget_show_all(window);
 	gtk_main();
