@@ -1,12 +1,9 @@
-function App(){
-  return (
-    <div>
-      <h1>REMI - Resume Management and Intelligence</h1>
-      <p>
-        Master Resume Dashboard
-      </p>
-    </div>
-  );
+import { useEffect } from "react";
+import { getResumeEntries } from "./api/resumeApi";
+import Dashboard from "./pages/Dashboard";
+
+function App() {
+  return <Dashboard />;
 }
 
 export default App;
