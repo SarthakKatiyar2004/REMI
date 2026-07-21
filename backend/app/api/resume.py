@@ -75,3 +75,25 @@ def update_resume(
     db.refresh(resume)
 
     return resume
+
+@router.delete("/{resume_id}")
+def delete_resume(
+    resume_id: int,
+    db: Session = Depends(get_db)
+):
+    resume = db.query(ResumeEntry).filter(
+        ResumeEntry.id == resume_id
+    ).first()
+
+    if resume is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Resume Entry Not Found"
+        )
+    
+    db.delete(Resume)
+    db.commit()
+
+    return {
+        "message": "Resume Entry Deleted Successfully"
+    }
