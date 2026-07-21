@@ -91,7 +91,7 @@ def delete_resume(
             detail="Resume Entry Not Found"
         )
     
-    db.delete(Resume)
+    db.delete(resume)
     db.commit()
 
     return {
