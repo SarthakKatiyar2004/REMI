@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { getResumeEntries } from "./api/resumeApi";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
