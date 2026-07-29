@@ -10,15 +10,10 @@ import CustomSections from "./CustomSections";
 
 const initialResume: Resume = {
     id: 1,
-
     name: "",
-
     education: [],
-
     experience: [],
-
     projects: [],
-
     customSections: [],
 };
 
@@ -41,14 +36,10 @@ function ResumeEditor() {
     };
 
     const handleUpdateProject = (updatedProject: Project) => {
-        setResume((prevResume) => ({
-            ...prevResume,
-            projects: prevResume.projects.map((project) =>
-                project.id === updatedProject.id
-                    ? updatedProject
-                    : project
-            ),
-        }));
+        setResume((prevResume) => ({...prevResume,projects: prevResume.projects.map((project) => project.id === updatedProject.id ? updatedProject: project),}));
+    };
+
+    const handleDeleteProject = (projectId: number) => {setResume((prevResume) => ({...prevResume,projects: prevResume.projects.filter((project) => project.id !== projectId),}));
     };
 
     return (
@@ -67,6 +58,7 @@ function ResumeEditor() {
                 projects={resume.projects}
                 onAddProject={handleAddProject}
                 onUpdateProject={handleUpdateProject}
+                onDeleteProject={handleDeleteProject}
             />
 
             <ExperienceSection

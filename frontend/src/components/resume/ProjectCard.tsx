@@ -5,11 +5,13 @@ import type { Project } from "../../types/resume";
 interface ProjectCardProps {
     project: Project;
     onUpdateProject: (project: Project) => void;
+    onDeleteProject: (projectId: number) => void;
 }
 
 function ProjectCard({
     project,
     onUpdateProject,
+    onDeleteProject,
 }: ProjectCardProps) {
     const [isEditing, setIsEditing] = useState(false);
 
@@ -18,13 +20,16 @@ function ProjectCard({
     const [description, setDescription] = useState(project.description);
 
     const handleSave = () => {
-        onUpdateProject({
-            ...project,
-            title,
-            description,
-        });
-
+        onUpdateProject({...project,title,description,});
         setIsEditing(false);
+    };
+
+    const handleDelete = () => {
+        const confirmed = window.confirm("Are you sure you want to delete this project?");
+        if (!confirmed){
+            return;
+        }
+        onDeleteProject(project.id);
     };
 
     return (
@@ -60,7 +65,7 @@ function ProjectCard({
                         Edit
                     </button>
 
-                    <button>
+                    <button onClick = {handleDelete}>
                         Delete
                     </button>
                 </>

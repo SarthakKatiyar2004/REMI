@@ -6,12 +6,14 @@ interface ProjectSectionProps {
     projects: Project[];
     onAddProject: () => void;
     onUpdateProject: (project: Project) => void;
+    onDeleteProject: (projectId: number) => void;
 }
 
 function ProjectSection({
     projects,
     onAddProject,
     onUpdateProject,
+    onDeleteProject,
 }: ProjectSectionProps) {
     return (
         <section>
@@ -25,6 +27,7 @@ function ProjectSection({
                         key={project.id}
                         project={project}
                         onUpdateProject={onUpdateProject}
+                        onDeleteProject={onDeleteProject}
                     />
                 ))
             )}
