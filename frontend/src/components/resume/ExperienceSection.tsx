@@ -1,37 +1,42 @@
 import type { Experience } from "../../types/resume";
+import ExperienceCard from "./ExperienceCard";
 
 interface ExperienceSectionProps {
-  experience: Experience[];
+    experience: Experience[];
+    onAddExperience: () => void;
+    onUpdateExperience: (experience: Experience) => void;
+    onDeleteExperience: (id: number) => void;
 }
 
 function ExperienceSection({
-  experience,
+    experience,
+    onAddExperience,
+    onUpdateExperience,
+    onDeleteExperience,
 }: ExperienceSectionProps) {
-  return (
-    <section>
-      <h2>Experience</h2>
 
-      {experience.length === 0 ? (
-        <p>No experience added.</p>
-      ) : (
-        experience.map((item) => (
-          <div key={item.id}>
-            <h3>{item.role}</h3>
+    return (
+        <section>
+            <h2>Experience</h2>
 
-            <p>{item.company}</p>
+            {experience.length === 0 ? (
+                <p>No experience added.</p>
+            ) : (
+                experience.map((item) => (
+                    <ExperienceCard
+                        key={item.id}
+                        experience={item}
+                        onUpdateExperience={onUpdateExperience}
+                        onDeleteExperience={onDeleteExperience}
+                    />
+                ))
+            )}
 
-            <p>
-              {item.from} - {item.to ?? "Present"}
-            </p>
-
-            <p>{item.description}</p>
-          </div>
-        ))
-      )}
-
-      <button>Add Experience</button>
-    </section>
-  );
+            <button onClick={onAddExperience}>
+                Add Experience
+            </button>
+        </section>
+    );
 }
 
 export default ExperienceSection;

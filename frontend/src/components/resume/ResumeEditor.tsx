@@ -1,46 +1,27 @@
-import { useState } from "react";
-
-import type { Resume, Project } from "../../types/resume";
-
 import NameSection from "./NameSection";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 import ProjectSection from "./ProjectSection";
 import CustomSections from "./CustomSections";
-
-const initialResume: Resume = {
-    id: 1,
-    name: "",
-    education: [],
-    experience: [],
-    projects: [],
-    customSections: [],
-};
+import { useResumeCrud } from "../../hooks/useResumeCrud";
 
 function ResumeEditor() {
-    const [resume, setResume] = useState(initialResume);
-
-    const handleAddProject = () => {
-        setResume((prevResume) => ({
-            ...prevResume,
-            projects: [
-                ...prevResume.projects,
-                {
-                    id: Date.now(),
-                    title: "Untitled Project",
-                    description: "No description",
-                    links: [],
-                },
-            ],
-        }));
-    };
-
-    const handleUpdateProject = (updatedProject: Project) => {
-        setResume((prevResume) => ({...prevResume,projects: prevResume.projects.map((project) => project.id === updatedProject.id ? updatedProject: project),}));
-    };
-
-    const handleDeleteProject = (projectId: number) => {setResume((prevResume) => ({...prevResume,projects: prevResume.projects.filter((project) => project.id !== projectId),}));
-    };
+    const {
+        resume,
+        updateName,
+        addProject,
+        updateProject,
+        deleteProject,
+        addEducation,
+        updateEducation,
+        deleteEducation,
+        addExperience,
+        updateExperience,
+        deleteExperience,
+        addCustomSection,
+        updateCustomSection,
+        deleteCustomSection,
+    } = useResumeCrud();
 
     return (
         <div>
@@ -48,28 +29,37 @@ function ResumeEditor() {
 
             <NameSection
                 name={resume.name}
+                onUpdateName={updateName}
             />
 
             <EducationSection
                 education={resume.education}
+                onAddEducation={addEducation}
+                onUpdateEducation={updateEducation}
+                onDeleteEducation={deleteEducation}
             />
 
             <ProjectSection
                 projects={resume.projects}
-                onAddProject={handleAddProject}
-                onUpdateProject={handleUpdateProject}
-                onDeleteProject={handleDeleteProject}
+                onAddProject={addProject}
+                onUpdateProject={updateProject}
+                onDeleteProject={deleteProject}
             />
 
             <ExperienceSection
                 experience={resume.experience}
+                onAddExperience={addExperience}
+                onUpdateExperience={updateExperience}
+                onDeleteExperience={deleteExperience}
             />
 
             <CustomSections
                 sections={resume.customSections}
+                onAddSection={addCustomSection}
+                onUpdateSection={updateCustomSection}
+                onDeleteSection={deleteCustomSection}
             />
         </div>
     );
 }
-
 export default ResumeEditor;

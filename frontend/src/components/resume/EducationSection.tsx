@@ -1,37 +1,47 @@
 import type { Education } from "../../types/resume";
+import EducationCard from "./EducationCard";
 
 interface EducationSectionProps {
-  education: Education[];
+    education: Education[];
+
+    onAddEducation: () => void;
+
+    onUpdateEducation: (education: Education) => void;
+
+    onDeleteEducation: (educationId: number) => void;
 }
 
 function EducationSection({
-  education,
+    education,
+    onAddEducation,
+    onUpdateEducation,
+    onDeleteEducation,
 }: EducationSectionProps) {
-  return (
-    <section>
-      <h2>Education</h2>
 
-      {education.length === 0 ? (
-        <p>No education added.</p>
-      ) : (
-        education.map((item) => (
-          <div key={item.id}>
-            <h3>{item.institute}</h3>
+    return (
+        <section>
 
-            <p>
-              {item.from} - {item.to ?? "Present"}
-            </p>
+            <h2>Education</h2>
 
-            {item.cgpa !== undefined && (
-              <p>CGPA: {item.cgpa}</p>
+            {education.length === 0 ? (
+                <p>No education added.</p>
+            ) : (
+                education.map((item) => (
+                    <EducationCard
+                        key={item.id}
+                        education={item}
+                        onUpdateEducation={onUpdateEducation}
+                        onDeleteEducation={onDeleteEducation}
+                    />
+                ))
             )}
-          </div>
-        ))
-      )}
 
-      <button>Add Education</button>
-    </section>
-  );
+            <button onClick={onAddEducation}>
+                Add Education
+            </button>
+
+        </section>
+    );
 }
 
 export default EducationSection;
