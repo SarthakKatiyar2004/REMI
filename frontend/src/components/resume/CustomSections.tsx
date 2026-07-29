@@ -1,4 +1,8 @@
-import type { CustomSection } from "../../types/resume";
+import type {
+    CustomSection,
+    CustomEntry,
+} from "../../types/resume";
+
 import CustomSectionCard from "./CustomSectionCard";
 
 interface CustomSectionsProps {
@@ -6,6 +10,15 @@ interface CustomSectionsProps {
     onAddSection: () => void;
     onUpdateSection: (section: CustomSection) => void;
     onDeleteSection: (id: number) => void;
+    onAddEntry: (sectionId: number) => void;
+    onUpdateEntry: (
+        sectionId: number,
+        entry: CustomEntry
+    ) => void;
+    onDeleteEntry: (
+        sectionId: number,
+        entryId: number
+    ) => void;
 }
 
 function CustomSections({
@@ -13,8 +26,10 @@ function CustomSections({
     onAddSection,
     onUpdateSection,
     onDeleteSection,
+    onAddEntry,
+    onUpdateEntry,
+    onDeleteEntry,
 }: CustomSectionsProps) {
-
     return (
         <section>
             <h2>Custom Sections</h2>
@@ -28,6 +43,9 @@ function CustomSections({
                         section={section}
                         onUpdateSection={onUpdateSection}
                         onDeleteSection={onDeleteSection}
+                        onAddEntry={onAddEntry}
+                        onUpdateEntry={onUpdateEntry}
+                        onDeleteEntry={onDeleteEntry}
                     />
                 ))
             )}

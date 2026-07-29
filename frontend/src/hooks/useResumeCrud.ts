@@ -6,6 +6,7 @@ import type {
     Education,
     Experience,
     CustomSection,
+    CustomEntry,
 } from "../types/resume";
 
 const initialResume: Resume = {
@@ -170,6 +171,65 @@ export function useResumeCrud() {
         }));
     };
 
+    const addCustomEntry = (sectionId: number) => {
+        setResume((prev) => ({
+            ...prev,
+            customSections: prev.customSections.map((section) =>
+                section.id === sectionId
+                    ? {
+                        ...section,
+                        entries: addSectionItem(section.entries, {
+                            id: Date.now(),
+                            title: "New Entry",
+                            description: "",
+                            links: [],
+                        }),
+                    }
+                    : section
+            ),
+        }));
+    };
+
+    const updateCustomEntry = (
+        sectionId: number,
+        updatedEntry: CustomEntry
+    ) => {
+        setResume((prev) => ({
+            ...prev,
+            customSections: prev.customSections.map((section) =>
+                section.id === sectionId
+                    ? {
+                        ...section,
+                        entries: updateSectionItem(
+                            section.entries,
+                            updatedEntry
+                        ),
+                    }
+                    : section
+            ),
+        }));
+    };
+
+    const deleteCustomEntry = (
+        sectionId: number,
+        entryId: number
+    ) => {
+        setResume((prev) => ({
+            ...prev,
+            customSections: prev.customSections.map((section) =>
+                section.id === sectionId
+                    ? {
+                        ...section,
+                        entries: deleteSectionItem(
+                            section.entries,
+                            entryId
+                        ),
+                    }
+                    : section
+            ),
+        }));
+    };
+
     return {
         resume,
         updateName,
@@ -185,5 +245,8 @@ export function useResumeCrud() {
         addCustomSection,
         updateCustomSection,
         deleteCustomSection,
+        addCustomEntry,
+        updateCustomEntry,
+        deleteCustomEntry,
     };
 }

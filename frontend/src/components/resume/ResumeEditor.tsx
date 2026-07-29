@@ -21,6 +21,9 @@ function ResumeEditor() {
         addCustomSection,
         updateCustomSection,
         deleteCustomSection,
+        addCustomEntry,
+        updateCustomEntry,
+        deleteCustomEntry,
     } = useResumeCrud();
 
     return (
@@ -58,8 +61,12 @@ function ResumeEditor() {
                 onAddSection={addCustomSection}
                 onUpdateSection={updateCustomSection}
                 onDeleteSection={deleteCustomSection}
+                onAddEntry={addCustomEntry}
+                onUpdateEntry={updateCustomEntry}
+                onDeleteEntry = {deleteCustomEntry}
             />
         </div>
     );
 }
+
 export default ResumeEditor;

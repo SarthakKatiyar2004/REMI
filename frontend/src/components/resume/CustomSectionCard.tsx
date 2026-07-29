@@ -1,18 +1,34 @@
 import { useState } from "react";
-import type { CustomSection } from "../../types/resume";
+import type {
+    CustomSection,
+    CustomEntry,
+} from "../../types/resume";
+
+import CustomEntryCard from "./CustomEntryCard";
 
 interface CustomSectionCardProps {
     section: CustomSection;
     onUpdateSection: (section: CustomSection) => void;
     onDeleteSection: (id: number) => void;
+    onAddEntry: (sectionId: number) => void;
+    onUpdateEntry: (
+        sectionId: number,
+        entry: CustomEntry
+    ) => void;
+    onDeleteEntry: (
+        sectionId: number,
+        entryId: number
+    ) => void;
 }
 
 function CustomSectionCard({
     section,
     onUpdateSection,
     onDeleteSection,
+    onAddEntry,
+    onUpdateEntry,
+    onDeleteEntry,
 }: CustomSectionCardProps) {
-
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(section.title);
 
@@ -37,9 +53,7 @@ function CustomSectionCard({
                 <>
                     <input
                         value={title}
-                        onChange={(e) =>
-                            setTitle(e.target.value)
-                        }
+                        onChange={(e) => setTitle(e.target.value)}
                     />
 
                     <button onClick={handleSave}>
@@ -50,9 +64,24 @@ function CustomSectionCard({
                 <>
                     <h3>{section.title}</h3>
 
-                    <button
-                        onClick={() => setIsEditing(true)}
-                    >
+                    {section.entries.map((entry) => (
+                        <CustomEntryCard
+                            key={entry.id}
+                            entry={entry}
+                            onUpdateEntry={(updatedEntry) =>
+                                onUpdateEntry(section.id, updatedEntry)
+                            }
+                            onDeleteEntry = {() => 
+                                onDeleteEntry(section.id, entry.id)
+                            }
+                        />
+                    ))}
+
+                    <button onClick={() => onAddEntry(section.id)}>
+                        Add Entry
+                    </button>
+
+                    <button onClick={() => setIsEditing(true)}>
                         Edit
                     </button>
 
