@@ -10,6 +10,15 @@ import type {
     CustomEntry,
 } from "../types/resume";
 
+import {
+    createProject,
+    createEducation,
+    createExperience,
+    createCustomSection,
+    createCustomEntry,
+} from "../utils/resumeFactories";
+
+
 const initialResume: Resume = {
     id: 1,
 
@@ -27,241 +36,360 @@ const initialResume: Resume = {
     customSections: [],
 };
 
-function addSectionItem<T>(items: T[], newItem: T): T[] {
-    return [...items, newItem];
-}
 
-function updateSectionItem<T extends { id: number }>(
-    items: T[],
-    updatedItem: T
-): T[] {
-    return items.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item
-    );
-}
+type ResumeSectionArrays = {
+    education: Education[];
+    experience: Experience[];
+    projects: Project[];
+    customSections: CustomSection[];
+};
 
-function deleteSectionItem<T extends { id: number }>(
-    items: T[],
-    id: number
-): T[] {
-    return items.filter((item) => item.id !== id);
-}
 
 export function useResumeCrud() {
+
     const [resume, setResume] = useState(initialResume);
 
+
     function updateHeader(header: Header) {
-    setResume((prev) => ({
-        ...prev,
-        header,
-    }));
+        setResume((prev) => ({
+            ...prev,
+            header,
+        }));
     }
 
+
+    // -------------------------
+    // Generic Top-Level CRUD
+    // -------------------------
+
+
+    function addItem<K extends keyof ResumeSectionArrays>(
+        section: K,
+        item: ResumeSectionArrays[K][number]
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            [section]: [
+                ...prev[section],
+                item,
+            ],
+        }));
+    }
+
+
+    function updateItem<K extends keyof ResumeSectionArrays>(
+        section: K,
+        item: ResumeSectionArrays[K][number]
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            [section]: prev[section].map(
+                (currentItem) =>
+                    currentItem.id === item.id
+                        ? item
+                        : currentItem
+            ),
+        }));
+    }
+
+
+    function deleteItem<K extends keyof ResumeSectionArrays>(
+        section: K,
+        id: number
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            [section]: prev[section].filter(
+                (item) => item.id !== id
+            ),
+        }));
+    }
+
+
+
+    // -------------------------
+    // Generic Nested CRUD
+    // -------------------------
+
+
+    function addNestedItem(
+        sectionId: number,
+        item: CustomEntry
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            customSections:
+                prev.customSections.map(
+                    (section) =>
+                        section.id === sectionId
+                            ? {
+                                ...section,
+                                entries: [
+                                    ...section.entries,
+                                    item,
+                                ],
+                            }
+                            : section
+                ),
+        }));
+    }
+
+
+    function updateNestedItem(
+        sectionId: number,
+        item: CustomEntry
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            customSections:
+                prev.customSections.map(
+                    (section) =>
+                        section.id === sectionId
+                            ? {
+                                ...section,
+                                entries:
+                                    section.entries.map(
+                                        (entry) =>
+                                            entry.id === item.id
+                                                ? item
+                                                : entry
+                                    ),
+                            }
+                            : section
+                ),
+        }));
+    }
+
+
+    function deleteNestedItem(
+        sectionId: number,
+        entryId: number
+    ) {
+        setResume((prev) => ({
+            ...prev,
+            customSections:
+                prev.customSections.map(
+                    (section) =>
+                        section.id === sectionId
+                            ? {
+                                ...section,
+                                entries:
+                                    section.entries.filter(
+                                        (entry) =>
+                                            entry.id !== entryId
+                                    ),
+                            }
+                            : section
+                ),
+        }));
+    }
+
+
+
+    // -------------------------
+    // Projects
+    // -------------------------
+
+
     const addProject = () => {
-        setResume((prev) => ({
-            ...prev,
-            projects: addSectionItem(prev.projects, {
-                id: Date.now(),
-                title: "Untitled Project",
-                description: "No description",
-                links: [],
-            }),
-        }));
+        addItem(
+            "projects",
+            createProject()
+        );
     };
 
-    const updateProject = (project: Project) => {
-        setResume((prev) => ({
-            ...prev,
-            projects: updateSectionItem(prev.projects, project),
-        }));
+
+    const updateProject = (
+        project: Project
+    ) => {
+        updateItem(
+            "projects",
+            project
+        );
     };
 
-    const deleteProject = (id: number) => {
-        setResume((prev) => ({
-            ...prev,
-            projects: deleteSectionItem(prev.projects, id),
-        }));
+
+    const deleteProject = (
+        id: number
+    ) => {
+        deleteItem(
+            "projects",
+            id
+        );
     };
+
+
+
+    // -------------------------
+    // Education
+    // -------------------------
+
 
     const addEducation = () => {
-        setResume((prev) => ({
-            ...prev,
-            education: addSectionItem(prev.education, {
-                id: Date.now(),
-                institute: "Institute",
-                from: "MM/YYYY",
-                to: "MM/YYYY",
-                cgpa: undefined,
-            }),
-        }));
+        addItem(
+            "education",
+            createEducation()
+        );
     };
 
-    const updateEducation = (education: Education) => {
-        setResume((prev) => ({
-            ...prev,
-            education: updateSectionItem(prev.education, education),
-        }));
+
+    const updateEducation = (
+        education: Education
+    ) => {
+        updateItem(
+            "education",
+            education
+        );
     };
 
-    const deleteEducation = (id: number) => {
-        setResume((prev) => ({
-            ...prev,
-            education: deleteSectionItem(prev.education, id),
-        }));
+
+    const deleteEducation = (
+        id: number
+    ) => {
+        deleteItem(
+            "education",
+            id
+        );
     };
+
+
+
+    // -------------------------
+    // Experience
+    // -------------------------
+
 
     const addExperience = () => {
-        setResume((prev) => ({
-            ...prev,
-            experience: addSectionItem(prev.experience, {
-                id: Date.now(),
-                role: "Role",
-                company: "Company",
-                from: "MM/YYYY",
-                to: "MM/YYYY",
-                description: "Description",
-            }),
-        }));
+        addItem(
+            "experience",
+            createExperience()
+        );
     };
 
-    const updateExperience = (experience: Experience) => {
-        setResume((prev) => ({
-            ...prev,
-            experience: updateSectionItem(
-                prev.experience,
-                experience
-            ),
-        }));
+
+    const updateExperience = (
+        experience: Experience
+    ) => {
+        updateItem(
+            "experience",
+            experience
+        );
     };
 
-    const deleteExperience = (id: number) => {
-        setResume((prev) => ({
-            ...prev,
-            experience: deleteSectionItem(
-                prev.experience,
-                id
-            ),
-        }));
+
+    const deleteExperience = (
+        id: number
+    ) => {
+        deleteItem(
+            "experience",
+            id
+        );
     };
+
+
+
+    // -------------------------
+    // Custom Sections
+    // -------------------------
+
 
     const addCustomSection = () => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: addSectionItem(
-                prev.customSections,
-                {
-                    id: Date.now(),
-                    title: "New Section",
-                    entries: [],
-                }
-            ),
-        }));
+        addItem(
+            "customSections",
+            createCustomSection()
+        );
     };
+
 
     const updateCustomSection = (
         section: CustomSection
     ) => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: updateSectionItem(
-                prev.customSections,
-                section
-            ),
-        }));
+        updateItem(
+            "customSections",
+            section
+        );
     };
 
-    const deleteCustomSection = (id: number) => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: deleteSectionItem(
-                prev.customSections,
-                id
-            ),
-        }));
+
+    const deleteCustomSection = (
+        id:number
+    ) => {
+        deleteItem(
+            "customSections",
+            id
+        );
     };
 
-    const addCustomEntry = (sectionId: number) => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: prev.customSections.map((section) =>
-                section.id === sectionId
-                    ? {
-                        ...section,
-                        entries: addSectionItem(section.entries, {
-                            id: Date.now(),
-                            title: "New Entry",
-                            description: "",
-                            links: [],
-                        }),
-                    }
-                    : section
-            ),
-        }));
+
+
+    // -------------------------
+    // Custom Entries
+    // -------------------------
+
+
+    const addCustomEntry = (
+        sectionId:number
+    ) => {
+        addNestedItem(
+            sectionId,
+            createCustomEntry()
+        );
     };
+
 
     const updateCustomEntry = (
-        sectionId: number,
-        updatedEntry: CustomEntry
+        sectionId:number,
+        entry:CustomEntry
     ) => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: prev.customSections.map((section) =>
-                section.id === sectionId
-                    ? {
-                        ...section,
-                        entries: updateSectionItem(
-                            section.entries,
-                            updatedEntry
-                        ),
-                    }
-                    : section
-            ),
-        }));
+        updateNestedItem(
+            sectionId,
+            entry
+        );
     };
+
 
     const deleteCustomEntry = (
-        sectionId: number,
-        entryId: number
+        sectionId:number,
+        entryId:number
     ) => {
-        setResume((prev) => ({
-            ...prev,
-            customSections: prev.customSections.map((section) =>
-                section.id === sectionId
-                    ? {
-                        ...section,
-                        entries: deleteSectionItem(
-                            section.entries,
-                            entryId
-                        ),
-                    }
-                    : section
-            ),
-        }));
+        deleteNestedItem(
+            sectionId,
+            entryId
+        );
     };
 
+
+
     return {
-    resume,
 
-    updateHeader,
+        resume,
 
-    addEducation,
-    updateEducation,
-    deleteEducation,
+        updateHeader,
 
-    addExperience,
-    updateExperience,
-    deleteExperience,
 
-    addProject,
-    updateProject,
-    deleteProject,
+        addEducation,
+        updateEducation,
+        deleteEducation,
 
-    addCustomSection,
-    updateCustomSection,
-    deleteCustomSection,
 
-    addCustomEntry,
-    updateCustomEntry,
-    deleteCustomEntry,
+        addExperience,
+        updateExperience,
+        deleteExperience,
+
+
+        addProject,
+        updateProject,
+        deleteProject,
+
+
+        addCustomSection,
+        updateCustomSection,
+        deleteCustomSection,
+
+
+        addCustomEntry,
+        updateCustomEntry,
+        deleteCustomEntry,
+
     };
 }
