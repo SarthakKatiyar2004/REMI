@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.resume import router as resume_router
+
 from app.db.database import Base, engine
-from app.models.resume import ResumeEntry
+import app.models
 
 app = FastAPI(
     title = "REMI API",
@@ -21,7 +23,6 @@ app.add_middleware(
 )
 
 Base.metadata.create_all(bind=engine)
-
 app.include_router(resume_router)
 
 @app.get("/")
