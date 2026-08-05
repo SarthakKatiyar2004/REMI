@@ -1,4 +1,10 @@
-import type { CustomSection, CustomEntry } from "../../types/resume";
+import { useState } from "react";
+
+import type {
+    CustomSection,
+    CustomEntry,
+} from "../../types/resume";
+
 import CustomSectionCard from "./CustomSectionCard";
 
 interface CustomSectionsProps {
@@ -6,11 +12,17 @@ interface CustomSectionsProps {
 
     onAddSection: () => void;
 
-    onUpdateSection: (section: CustomSection) => void;
+    onUpdateSection: (
+        section: CustomSection
+    ) => void;
 
-    onDeleteSection: (sectionId: number) => void;
+    onDeleteSection: (
+        sectionId: number
+    ) => void;
 
-    onAddEntry: (sectionId: number) => void;
+    onAddEntry: (
+        sectionId: number
+    ) => void;
 
     onUpdateEntry: (
         sectionId: number,
@@ -33,34 +45,56 @@ function CustomSections({
     onDeleteEntry,
 }: CustomSectionsProps) {
 
+    const [isEditing, setIsEditing] =
+        useState(false);
+
     return (
         <section>
 
             <h2>Custom Sections</h2>
 
             {sections.length === 0 ? (
-                <p>No custom sections added.</p>
+                <p>
+                    No custom sections added.
+                </p>
             ) : (
                 sections.map((section) => (
                     <CustomSectionCard
                         key={section.id}
                         section={section}
-                        onUpdateSection={onUpdateSection}
+                        onUpdateSection={
+                            onUpdateSection
+                        }
                         onDeleteSection={() =>
-                            onDeleteSection(section.id)
+                            onDeleteSection(
+                                section.id
+                            )
                         }
                         onAddEntry={() =>
-                            onAddEntry(section.id)
+                            onAddEntry(
+                                section.id
+                            )
                         }
-                        onUpdateEntry={onUpdateEntry}
-                        onDeleteEntry={onDeleteEntry}
+                        onUpdateEntry={
+                            onUpdateEntry
+                        }
+                        onDeleteEntry={
+                            onDeleteEntry
+                        }
+                        onEditStateChange={
+                            setIsEditing
+                        }
                     />
                 ))
             )}
 
-            <button onClick={onAddSection}>
-                Add Section
-            </button>
+            {!isEditing && (
+                <button
+                    onClick={onAddSection}
+                >
+                    Add Section
+                </button>
+            )}
 
         </section>
     );

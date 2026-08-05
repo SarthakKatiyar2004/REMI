@@ -1,88 +1,123 @@
-import { useState } from "react";
 import type { Education } from "../../types/resume";
+
+import { useEditable } from "../../hooks/useEditable";
+
+import CardActions from "../common/CardActions";
+import FormInput from "../common/FormInput";
 
 interface EducationCardProps {
     education: Education;
-    onUpdateEducation: (education: Education) => void;
+
+    onUpdateEducation: (
+        education: Education
+    ) => void;
+
     onDeleteEducation: () => void;
+
+    onEditStateChange?: (
+        editing: boolean
+    ) => void;
 }
 
 function EducationCard({
     education,
     onUpdateEducation,
     onDeleteEducation,
+    onEditStateChange,
 }: EducationCardProps) {
 
-    const [isEditing, setIsEditing] = useState(false);
+    const {
+        isEditing,
+        setIsEditing,
+        editedValue: editedEducation,
+        updateField,
+        save,
+        cancel,
+    } = useEditable(
+        education,
+        onUpdateEducation
+    );
 
-    const [editedEducation, setEditedEducation] = useState(education);
+    function startEditing() {
+        setIsEditing(true);
+        onEditStateChange?.(true);
+    }
 
     function handleSave() {
-        onUpdateEducation(editedEducation);
-        setIsEditing(false);
+        save();
+        onEditStateChange?.(false);
+    }
+
+    function handleCancel() {
+        cancel();
+        onEditStateChange?.(false);
     }
 
     if (isEditing) {
         return (
             <div>
 
-                <input
+                <FormInput
                     placeholder="Institute Name"
                     value={editedEducation.instituteName}
-                    onChange={(e) =>
-                        setEditedEducation({
-                            ...editedEducation,
-                            instituteName: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "instituteName",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="Degree Name"
                     value={editedEducation.degreeName}
-                    onChange={(e) =>
-                        setEditedEducation({
-                            ...editedEducation,
-                            degreeName: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "degreeName",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     type="month"
                     value={editedEducation.fromDate}
-                    onChange={(e) =>
-                        setEditedEducation({
-                            ...editedEducation,
-                            fromDate: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "fromDate",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     type="month"
                     value={editedEducation.toDate}
-                    onChange={(e) =>
-                        setEditedEducation({
-                            ...editedEducation,
-                            toDate: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "toDate",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="CGPA (Optional)"
                     value={editedEducation.cgpa ?? ""}
-                    onChange={(e) =>
-                        setEditedEducation({
-                            ...editedEducation,
-                            cgpa: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "cgpa",
+                            value
+                        )
                     }
                 />
 
                 <button onClick={handleSave}>
                     Save
+                </button>
+
+                <button onClick={handleCancel}>
+                    Cancel
                 </button>
 
             </div>
@@ -92,25 +127,30 @@ function EducationCard({
     return (
         <div>
 
-            <h3>{education.degreeName}</h3>
-
-            <p>{education.instituteName}</p>
+            <h3>
+                {education.degreeName}
+            </h3>
 
             <p>
-                {education.fromDate} - {education.toDate}
+                {education.instituteName}
+            </p>
+
+            <p>
+                {education.fromDate}
+                {" - "}
+                {education.toDate}
             </p>
 
             {education.cgpa && (
-                <p>CGPA : {education.cgpa}</p>
+                <p>
+                    CGPA : {education.cgpa}
+                </p>
             )}
 
-            <button onClick={() => setIsEditing(true)}>
-                Edit
-            </button>
-
-            <button onClick={onDeleteEducation}>
-                Delete
-            </button>
+            <CardActions
+                onEdit={startEditing}
+                onDelete={onDeleteEducation}
+            />
 
         </div>
     );

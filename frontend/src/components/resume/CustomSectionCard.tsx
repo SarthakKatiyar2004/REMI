@@ -5,12 +5,19 @@ import type {
     CustomEntry,
 } from "../../types/resume";
 
+import { useEditable } from "../../hooks/useEditable";
+
 import CustomEntryCard from "./CustomEntryCard";
+
+import CardActions from "../common/CardActions";
+import FormInput from "../common/FormInput";
 
 interface CustomSectionCardProps {
     section: CustomSection;
 
-    onUpdateSection: (section: CustomSection) => void;
+    onUpdateSection: (
+        section: CustomSection
+    ) => void;
 
     onDeleteSection: () => void;
 
@@ -25,6 +32,10 @@ interface CustomSectionCardProps {
         sectionId: number,
         entryId: number
     ) => void;
+
+    onEditStateChange?: (
+        editing: boolean
+    ) => void;
 }
 
 function CustomSectionCard({
@@ -34,27 +45,73 @@ function CustomSectionCard({
     onAddEntry,
     onUpdateEntry,
     onDeleteEntry,
+    onEditStateChange,
 }: CustomSectionCardProps) {
 
-    const [title, setTitle] = useState(section.title);
+    const [isEntryEditing, setIsEntryEditing] =
+        useState(false);
 
-    function saveTitle() {
-        onUpdateSection({
-            ...section,
-            title,
-        });
+    const {
+        isEditing,
+        setIsEditing,
+        editedValue: editedSection,
+        updateField,
+        save,
+        cancel,
+    } = useEditable(
+        section,
+        onUpdateSection
+    );
+
+    function startEditing() {
+        setIsEditing(true);
+        onEditStateChange?.(true);
+    }
+
+    function handleSave() {
+        save();
+        onEditStateChange?.(false);
+    }
+
+    function handleCancel() {
+        cancel();
+        onEditStateChange?.(false);
     }
 
     return (
         <div>
 
-            <input
-                value={title}
-                onChange={(e) =>
-                    setTitle(e.target.value)
-                }
-                onBlur={saveTitle}
-            />
+            {isEditing ? (
+                <>
+                    <FormInput
+                        placeholder="Section Title"
+                        value={editedSection.title}
+                        onChange={(value) =>
+                            updateField(
+                                "title",
+                                value
+                            )
+                        }
+                    />
+
+                    <button onClick={handleSave}>
+                        Save
+                    </button>
+
+                    <button onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </>
+            ) : (
+                <>
+                    <h3>{section.title}</h3>
+
+                    <CardActions
+                        onEdit={startEditing}
+                        onDelete={onDeleteSection}
+                    />
+                </>
+            )}
 
             {section.entries.map((entry) => (
                 <CustomEntryCard
@@ -72,16 +129,20 @@ function CustomSectionCard({
                             entry.id
                         )
                     }
+                    onEditStateChange={
+                        setIsEntryEditing
+                    }
                 />
             ))}
 
-            <button onClick={onAddEntry}>
-                Add Entry
-            </button>
-
-            <button onClick={onDeleteSection}>
-                Delete Section
-            </button>
+            {!isEditing &&
+                !isEntryEditing && (
+                    <button
+                        onClick={onAddEntry}
+                    >
+                        Add Entry
+                    </button>
+                )}
 
         </div>
     );

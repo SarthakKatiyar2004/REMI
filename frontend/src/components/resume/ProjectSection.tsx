@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Project } from "../../types/resume";
 import ProjectCard from "./ProjectCard";
 
@@ -6,9 +8,13 @@ interface ProjectSectionProps {
 
     onAddProject: () => void;
 
-    onUpdateProject: (project: Project) => void;
+    onUpdateProject: (
+        project: Project
+    ) => void;
 
-    onDeleteProject: (projectId: number) => void;
+    onDeleteProject: (
+        projectId: number
+    ) => void;
 }
 
 function ProjectSection({
@@ -18,27 +24,45 @@ function ProjectSection({
     onDeleteProject,
 }: ProjectSectionProps) {
 
+    const [isEditing, setIsEditing] =
+        useState(false);
+
     return (
         <section>
 
             <h2>Projects</h2>
 
             {projects.length === 0 ? (
-                <p>No projects added.</p>
+                <p>
+                    No projects added.
+                </p>
             ) : (
                 projects.map((item) => (
                     <ProjectCard
                         key={item.id}
                         project={item}
-                        onUpdateProject={onUpdateProject}
-                        onDeleteProject={() => onDeleteProject(item.id)}
+                        onUpdateProject={
+                            onUpdateProject
+                        }
+                        onDeleteProject={() =>
+                            onDeleteProject(
+                                item.id
+                            )
+                        }
+                        onEditStateChange={
+                            setIsEditing
+                        }
                     />
                 ))
             )}
 
-            <button onClick={onAddProject}>
-                Add Project
-            </button>
+            {!isEditing && (
+                <button
+                    onClick={onAddProject}
+                >
+                    Add Project
+                </button>
+            )}
 
         </section>
     );

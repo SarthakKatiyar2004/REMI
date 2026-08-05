@@ -1,69 +1,102 @@
-import { useState } from "react";
-
 import type { CustomEntry } from "../../types/resume";
+
+import { useEditable } from "../../hooks/useEditable";
+
+import CardActions from "../common/CardActions";
+import FormInput from "../common/FormInput";
+import FormTextArea from "../common/FormTextArea";
 
 interface CustomEntryCardProps {
     entry: CustomEntry;
 
-    onUpdateEntry: (entry: CustomEntry) => void;
+    onUpdateEntry: (
+        entry: CustomEntry
+    ) => void;
 
     onDeleteEntry: () => void;
+
+    onEditStateChange?: (
+        editing: boolean
+    ) => void;
 }
 
 function CustomEntryCard({
     entry,
     onUpdateEntry,
     onDeleteEntry,
+    onEditStateChange,
 }: CustomEntryCardProps) {
 
-    const [isEditing, setIsEditing] = useState(false);
+    const {
+        isEditing,
+        setIsEditing,
+        editedValue: editedEntry,
+        updateField,
+        save,
+        cancel,
+    } = useEditable(
+        entry,
+        onUpdateEntry
+    );
 
-    const [editedEntry, setEditedEntry] = useState(entry);
+    function startEditing() {
+        setIsEditing(true);
+        onEditStateChange?.(true);
+    }
 
     function handleSave() {
-        onUpdateEntry(editedEntry);
-        setIsEditing(false);
+        save();
+        onEditStateChange?.(false);
+    }
+
+    function handleCancel() {
+        cancel();
+        onEditStateChange?.(false);
     }
 
     if (isEditing) {
         return (
             <div>
 
-                <input
+                <FormInput
                     placeholder="Title (Optional)"
                     value={editedEntry.title ?? ""}
-                    onChange={(e) =>
-                        setEditedEntry({
-                            ...editedEntry,
-                            title: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "title",
+                            value
+                        )
                     }
                 />
 
-                <textarea
+                <FormTextArea
                     placeholder="Description (Optional)"
                     value={editedEntry.description ?? ""}
-                    onChange={(e) =>
-                        setEditedEntry({
-                            ...editedEntry,
-                            description: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "description",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="Link (Optional)"
                     value={editedEntry.link ?? ""}
-                    onChange={(e) =>
-                        setEditedEntry({
-                            ...editedEntry,
-                            link: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "link",
+                            value
+                        )
                     }
                 />
 
                 <button onClick={handleSave}>
                     Save
+                </button>
+
+                <button onClick={handleCancel}>
+                    Cancel
                 </button>
 
             </div>
@@ -73,7 +106,9 @@ function CustomEntryCard({
     return (
         <div>
 
-            {entry.title && <h4>{entry.title}</h4>}
+            {entry.title && (
+                <h4>{entry.title}</h4>
+            )}
 
             {entry.description && (
                 <p>{entry.description}</p>
@@ -91,19 +126,10 @@ function CustomEntryCard({
 
             <br />
 
-            <button
-                onClick={() =>
-                    setIsEditing(true)
-                }
-            >
-                Edit
-            </button>
-
-            <button
-                onClick={onDeleteEntry}
-            >
-                Delete
-            </button>
+            <CardActions
+                onEdit={startEditing}
+                onDelete={onDeleteEntry}
+            />
 
         </div>
     );

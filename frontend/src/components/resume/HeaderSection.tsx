@@ -1,5 +1,7 @@
 import type { Header } from "../../types/resume";
 
+import FormInput from "../common/FormInput";
+
 interface HeaderSectionProps {
     header: Header;
     onUpdateHeader: (header: Header) => void;
@@ -25,48 +27,44 @@ function HeaderSection({
 
             <h2>Header</h2>
 
-            <input
-                type="text"
+            <FormInput
                 placeholder="Name"
                 value={header.name}
-                onChange={(e) =>
-                    handleChange("name", e.target.value)
+                onChange={(value) =>
+                    handleChange("name", value)
                 }
             />
 
-            <input
+            <FormInput
                 type="email"
                 placeholder="Email"
                 value={header.email}
-                onChange={(e) =>
-                    handleChange("email", e.target.value)
+                onChange={(value) =>
+                    handleChange("email", value)
                 }
             />
 
-            <input
-                type="text"
+            <FormInput
                 placeholder="Contact"
                 value={header.contact}
-                onChange={(e) =>
-                    handleChange("contact", e.target.value)
+                onChange={(value) =>
+                    handleChange("contact", value)
                 }
             />
 
-            <input
-                type="text"
+            <FormInput
                 placeholder="Portfolio (Optional)"
                 value={header.portfolio ?? ""}
-                onChange={(e) =>
-                    handleChange("portfolio", e.target.value)
+                onChange={(value) =>
+                    handleChange("portfolio", value)
                 }
             />
 
-            <input
-                type="text"
+            <FormInput
                 placeholder="Address (Optional)"
                 value={header.address ?? ""}
-                onChange={(e) =>
-                    handleChange("address", e.target.value)
+                onChange={(value) =>
+                    handleChange("address", value)
                 }
             />
 

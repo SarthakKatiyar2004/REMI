@@ -1,110 +1,150 @@
-import { useState } from "react";
 import type { Experience } from "../../types/resume";
+
+import { useEditable } from "../../hooks/useEditable";
+
+import CardActions from "../common/CardActions";
+import FormInput from "../common/FormInput";
+import FormTextArea from "../common/FormTextArea";
 
 interface ExperienceCardProps {
     experience: Experience;
-    onUpdateExperience: (experience: Experience) => void;
+
+    onUpdateExperience: (
+        experience: Experience
+    ) => void;
+
     onDeleteExperience: () => void;
+
+    onEditStateChange?: (
+        editing: boolean
+    ) => void;
 }
 
 function ExperienceCard({
     experience,
     onUpdateExperience,
     onDeleteExperience,
+    onEditStateChange,
 }: ExperienceCardProps) {
 
-    const [isEditing, setIsEditing] = useState(false);
+    const {
+        isEditing,
+        setIsEditing,
+        editedValue: editedExperience,
+        updateField,
+        save,
+        cancel,
+    } = useEditable(
+        experience,
+        onUpdateExperience
+    );
 
-    const [editedExperience, setEditedExperience] = useState(experience);
+    function startEditing() {
+        setIsEditing(true);
+        onEditStateChange?.(true);
+    }
 
     function handleSave() {
-        onUpdateExperience(editedExperience);
-        setIsEditing(false);
+        save();
+        onEditStateChange?.(false);
+    }
+
+    function handleCancel() {
+        cancel();
+        onEditStateChange?.(false);
     }
 
     if (isEditing) {
         return (
             <div>
 
-                <input
+                <FormInput
                     placeholder="Role Title"
                     value={editedExperience.roleTitle}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            roleTitle: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "roleTitle",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="Institute Name"
                     value={editedExperience.instituteName}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            instituteName: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "instituteName",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     type="month"
                     value={editedExperience.fromDate}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            fromDate: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "fromDate",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     type="month"
                     value={editedExperience.toDate}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            toDate: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "toDate",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="Location (Optional)"
-                    value={editedExperience.location ?? ""}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            location: e.target.value,
-                        })
+                    value={
+                        editedExperience.location ?? ""
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "location",
+                            value
+                        )
                     }
                 />
 
-                <textarea
+                <FormTextArea
                     placeholder="Description"
                     value={editedExperience.description}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            description: e.target.value,
-                        })
+                    onChange={(value) =>
+                        updateField(
+                            "description",
+                            value
+                        )
                     }
                 />
 
-                <input
+                <FormInput
                     placeholder="Certificate Link (Optional)"
-                    value={editedExperience.certificateLink ?? ""}
-                    onChange={(e) =>
-                        setEditedExperience({
-                            ...editedExperience,
-                            certificateLink: e.target.value,
-                        })
+                    value={
+                        editedExperience.certificateLink ?? ""
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "certificateLink",
+                            value
+                        )
                     }
                 />
 
                 <button onClick={handleSave}>
                     Save
+                </button>
+
+                <button onClick={handleCancel}>
+                    Cancel
                 </button>
 
             </div>
@@ -114,19 +154,29 @@ function ExperienceCard({
     return (
         <div>
 
-            <h3>{experience.roleTitle}</h3>
-
-            <p>{experience.instituteName}</p>
+            <h3>
+                {experience.roleTitle}
+            </h3>
 
             <p>
-                {experience.fromDate} - {experience.toDate}
+                {experience.instituteName}
+            </p>
+
+            <p>
+                {experience.fromDate}
+                {" - "}
+                {experience.toDate}
             </p>
 
             {experience.location && (
-                <p>{experience.location}</p>
+                <p>
+                    {experience.location}
+                </p>
             )}
 
-            <p>{experience.description}</p>
+            <p>
+                {experience.description}
+            </p>
 
             {experience.certificateLink && (
                 <a
@@ -140,13 +190,10 @@ function ExperienceCard({
 
             <br />
 
-            <button onClick={() => setIsEditing(true)}>
-                Edit
-            </button>
-
-            <button onClick={onDeleteExperience}>
-                Delete
-            </button>
+            <CardActions
+                onEdit={startEditing}
+                onDelete={onDeleteExperience}
+            />
 
         </div>
     );

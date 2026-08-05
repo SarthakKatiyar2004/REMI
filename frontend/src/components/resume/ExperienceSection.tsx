@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Experience } from "../../types/resume";
 import ExperienceCard from "./ExperienceCard";
 
@@ -6,9 +8,13 @@ interface ExperienceSectionProps {
 
     onAddExperience: () => void;
 
-    onUpdateExperience: (experience: Experience) => void;
+    onUpdateExperience: (
+        experience: Experience
+    ) => void;
 
-    onDeleteExperience: (experienceId: number) => void;
+    onDeleteExperience: (
+        experienceId: number
+    ) => void;
 }
 
 function ExperienceSection({
@@ -18,27 +24,45 @@ function ExperienceSection({
     onDeleteExperience,
 }: ExperienceSectionProps) {
 
+    const [isEditing, setIsEditing] =
+        useState(false);
+
     return (
         <section>
 
             <h2>Experience</h2>
 
             {experience.length === 0 ? (
-                <p>No experience added.</p>
+                <p>
+                    No experience added.
+                </p>
             ) : (
                 experience.map((item) => (
                     <ExperienceCard
                         key={item.id}
                         experience={item}
-                        onUpdateExperience={onUpdateExperience}
-                        onDeleteExperience={() => onDeleteExperience(item.id)}
+                        onUpdateExperience={
+                            onUpdateExperience
+                        }
+                        onDeleteExperience={() =>
+                            onDeleteExperience(
+                                item.id
+                            )
+                        }
+                        onEditStateChange={
+                            setIsEditing
+                        }
                     />
                 ))
             )}
 
-            <button onClick={onAddExperience}>
-                Add Experience
-            </button>
+            {!isEditing && (
+                <button
+                    onClick={onAddExperience}
+                >
+                    Add Experience
+                </button>
+            )}
 
         </section>
     );

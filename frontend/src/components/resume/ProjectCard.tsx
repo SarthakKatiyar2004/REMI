@@ -1,89 +1,151 @@
-import { useState } from "react";
 import type { Project } from "../../types/resume";
+
+import { useEditable } from "../../hooks/useEditable";
+
+import CardActions from "../common/CardActions";
+import FormInput from "../common/FormInput";
+import FormTextArea from "../common/FormTextArea";
+
 
 interface ProjectCardProps {
     project: Project;
-    onUpdateProject: (project: Project) => void;
+
+    onUpdateProject: (
+        project: Project
+    ) => void;
+
     onDeleteProject: () => void;
+
+    onEditStateChange?: (
+        editing: boolean
+    ) => void;
 }
+
 
 function ProjectCard({
     project,
     onUpdateProject,
     onDeleteProject,
+    onEditStateChange,
 }: ProjectCardProps) {
 
-    const [isEditing, setIsEditing] = useState(false);
+    const {
+        isEditing,
+        setIsEditing,
+        editedValue: editedProject,
+        updateField,
+        save,
+        cancel,
+    } = useEditable(
+        project,
+        onUpdateProject
+    );
 
-    const [editedProject, setEditedProject] = useState(project);
+
+    function startEditing() {
+        setIsEditing(true);
+        onEditStateChange?.(true);
+    }
+
 
     function handleSave() {
-        onUpdateProject(editedProject);
-        setIsEditing(false);
+        save();
+        onEditStateChange?.(false);
     }
+
+
+    function handleCancel() {
+        cancel();
+        onEditStateChange?.(false);
+    }
+
 
     if (isEditing) {
         return (
             <div>
 
-                <input
+                <FormInput
                     placeholder="Project Title"
-                    value={editedProject.projectTitle}
-                    onChange={(e) =>
-                        setEditedProject({
-                            ...editedProject,
-                            projectTitle: e.target.value,
-                        })
+                    value={
+                        editedProject.projectTitle
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "projectTitle",
+                            value
+                        )
                     }
                 />
 
-                <textarea
+
+                <FormTextArea
                     placeholder="Description"
-                    value={editedProject.description}
-                    onChange={(e) =>
-                        setEditedProject({
-                            ...editedProject,
-                            description: e.target.value,
-                        })
+                    value={
+                        editedProject.description
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "description",
+                            value
+                        )
                     }
                 />
 
-                <input
+
+                <FormInput
                     placeholder="Codebase Link (Optional)"
-                    value={editedProject.codebaseLink ?? ""}
-                    onChange={(e) =>
-                        setEditedProject({
-                            ...editedProject,
-                            codebaseLink: e.target.value,
-                        })
+                    value={
+                        editedProject.codebaseLink ?? ""
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "codebaseLink",
+                            value
+                        )
                     }
                 />
 
-                <input
+
+                <FormInput
                     placeholder="Demo Link (Optional)"
-                    value={editedProject.demoLink ?? ""}
-                    onChange={(e) =>
-                        setEditedProject({
-                            ...editedProject,
-                            demoLink: e.target.value,
-                        })
+                    value={
+                        editedProject.demoLink ?? ""
+                    }
+                    onChange={(value) =>
+                        updateField(
+                            "demoLink",
+                            value
+                        )
                     }
                 />
+
 
                 <button onClick={handleSave}>
                     Save
+                </button>
+
+
+                <button onClick={handleCancel}>
+                    Cancel
                 </button>
 
             </div>
         );
     }
 
+
     return (
         <div>
 
-            <h3>{project.projectTitle}</h3>
+            <h3>
+                {project.projectTitle}
+            </h3>
 
-            <p>{project.description}</p>
+
+            <p>
+                {project.description}
+            </p>
+
 
             {project.codebaseLink && (
                 <a
@@ -95,7 +157,9 @@ function ProjectCard({
                 </a>
             )}
 
+
             <br />
+
 
             {project.demoLink && (
                 <a
@@ -107,18 +171,18 @@ function ProjectCard({
                 </a>
             )}
 
+
             <br />
 
-            <button onClick={() => setIsEditing(true)}>
-                Edit
-            </button>
 
-            <button onClick={onDeleteProject}>
-                Delete
-            </button>
+            <CardActions
+                onEdit={startEditing}
+                onDelete={onDeleteProject}
+            />
 
         </div>
     );
 }
+
 
 export default ProjectCard;
