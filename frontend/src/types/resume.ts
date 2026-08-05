@@ -1,35 +1,44 @@
-export interface Resume {
-    id: number;
+export interface Header {
     name: string;
-    education: Education[];
-    experience: Experience[];
-    projects: Project[];
-    customSections: CustomSection[];
+    email: string;
+    contact: string;
+    portfolio?: string;
+    address?: string;
 }
 
 export interface Education {
     id: number;
-    institute: string;
-    from: string;
-    to?: string;
-    cgpa?: number;
+    instituteName: string;
+    degreeName: string;
+    fromDate: string;
+    toDate: string;
+    cgpa?: string;
 }
 
 export interface Experience {
     id: number;
-    role: string;
-    company: string;
-    from: string;
-    to?: string;
+    roleTitle: string;
+    instituteName: string;
+    fromDate: string;
+    toDate: string;
+    location?: string;
     description: string;
-    links?: Link[];
+    certificateLink?: string;
 }
 
 export interface Project {
     id: number;
-    title: string;
+    projectTitle: string;
     description: string;
-    links?: Link[];
+    codebaseLink?: string;
+    demoLink?: string;
+}
+
+export interface CustomEntry {
+    id: number;
+    title?: string;
+    description?: string;
+    link?: string;
 }
 
 export interface CustomSection {
@@ -38,15 +47,11 @@ export interface CustomSection {
     entries: CustomEntry[];
 }
 
-export interface CustomEntry {
+export interface Resume {
     id: number;
-    title: string;
-    description: string;
-    links?: Link[];
-}
-
-export interface Link {
-    id: number;
-    label?: string;
-    url: string;
+    header: Header;
+    education: Education[];
+    experience: Experience[];
+    projects: Project[];
+    customSections: CustomSection[];
 }

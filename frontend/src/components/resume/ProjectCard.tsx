@@ -1,11 +1,10 @@
 import { useState } from "react";
-
 import type { Project } from "../../types/resume";
 
 interface ProjectCardProps {
     project: Project;
     onUpdateProject: (project: Project) => void;
-    onDeleteProject: (projectId: number) => void;
+    onDeleteProject: () => void;
 }
 
 function ProjectCard({
@@ -13,63 +12,111 @@ function ProjectCard({
     onUpdateProject,
     onDeleteProject,
 }: ProjectCardProps) {
+
     const [isEditing, setIsEditing] = useState(false);
 
-    const [title, setTitle] = useState(project.title);
+    const [editedProject, setEditedProject] = useState(project);
 
-    const [description, setDescription] = useState(project.description);
-
-    const handleSave = () => {
-        onUpdateProject({...project,title,description,});
+    function handleSave() {
+        onUpdateProject(editedProject);
         setIsEditing(false);
-    };
+    }
 
-    const handleDelete = () => {
-        const confirmed = window.confirm("Are you sure you want to delete this project?");
-        if (!confirmed){
-            return;
-        }
-        onDeleteProject(project.id);
-    };
+    if (isEditing) {
+        return (
+            <div>
+
+                <input
+                    placeholder="Project Title"
+                    value={editedProject.projectTitle}
+                    onChange={(e) =>
+                        setEditedProject({
+                            ...editedProject,
+                            projectTitle: e.target.value,
+                        })
+                    }
+                />
+
+                <textarea
+                    placeholder="Description"
+                    value={editedProject.description}
+                    onChange={(e) =>
+                        setEditedProject({
+                            ...editedProject,
+                            description: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Codebase Link (Optional)"
+                    value={editedProject.codebaseLink ?? ""}
+                    onChange={(e) =>
+                        setEditedProject({
+                            ...editedProject,
+                            codebaseLink: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Demo Link (Optional)"
+                    value={editedProject.demoLink ?? ""}
+                    onChange={(e) =>
+                        setEditedProject({
+                            ...editedProject,
+                            demoLink: e.target.value,
+                        })
+                    }
+                />
+
+                <button onClick={handleSave}>
+                    Save
+                </button>
+
+            </div>
+        );
+    }
 
     return (
         <div>
-            {isEditing ? (
-                <>
-                    <label>Title</label>
 
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+            <h3>{project.projectTitle}</h3>
 
-                    <label>Description</label>
+            <p>{project.description}</p>
 
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-
-                    <button onClick={handleSave}>
-                        Save
-                    </button>
-                </>
-            ) : (
-                <>
-                    <h3>{project.title}</h3>
-
-                    <p>{project.description}</p>
-
-                    <button onClick={() => setIsEditing(true)}>
-                        Edit
-                    </button>
-
-                    <button onClick = {handleDelete}>
-                        Delete
-                    </button>
-                </>
+            {project.codebaseLink && (
+                <a
+                    href={project.codebaseLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Codebase
+                </a>
             )}
+
+            <br />
+
+            {project.demoLink && (
+                <a
+                    href={project.demoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Demo
+                </a>
+            )}
+
+            <br />
+
+            <button onClick={() => setIsEditing(true)}>
+                Edit
+            </button>
+
+            <button onClick={onDeleteProject}>
+                Delete
+            </button>
+
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import NameSection from "./NameSection";
+import HeaderSection from "./HeaderSection";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 import ProjectSection from "./ProjectSection";
@@ -8,19 +8,24 @@ import { useResumeCrud } from "../../hooks/useResumeCrud";
 function ResumeEditor() {
     const {
         resume,
-        updateName,
-        addProject,
-        updateProject,
-        deleteProject,
+        updateHeader,
+
         addEducation,
         updateEducation,
         deleteEducation,
+
         addExperience,
         updateExperience,
         deleteExperience,
+
+        addProject,
+        updateProject,
+        deleteProject,
+
         addCustomSection,
         updateCustomSection,
         deleteCustomSection,
+
         addCustomEntry,
         updateCustomEntry,
         deleteCustomEntry,
@@ -30,9 +35,9 @@ function ResumeEditor() {
         <div>
             <h1>Start Creating Your Resume</h1>
 
-            <NameSection
-                name={resume.name}
-                onUpdateName={updateName}
+            <HeaderSection
+                header={resume.header}
+                onUpdateHeader={updateHeader}
             />
 
             <EducationSection
@@ -42,18 +47,18 @@ function ResumeEditor() {
                 onDeleteEducation={deleteEducation}
             />
 
-            <ProjectSection
-                projects={resume.projects}
-                onAddProject={addProject}
-                onUpdateProject={updateProject}
-                onDeleteProject={deleteProject}
-            />
-
             <ExperienceSection
                 experience={resume.experience}
                 onAddExperience={addExperience}
                 onUpdateExperience={updateExperience}
                 onDeleteExperience={deleteExperience}
+            />
+
+            <ProjectSection
+                projects={resume.projects}
+                onAddProject={addProject}
+                onUpdateProject={updateProject}
+                onDeleteProject={deleteProject}
             />
 
             <CustomSections
@@ -63,7 +68,7 @@ function ResumeEditor() {
                 onDeleteSection={deleteCustomSection}
                 onAddEntry={addCustomEntry}
                 onUpdateEntry={updateCustomEntry}
-                onDeleteEntry = {deleteCustomEntry}
+                onDeleteEntry={deleteCustomEntry}
             />
         </div>
     );

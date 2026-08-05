@@ -3,9 +3,12 @@ import ExperienceCard from "./ExperienceCard";
 
 interface ExperienceSectionProps {
     experience: Experience[];
+
     onAddExperience: () => void;
+
     onUpdateExperience: (experience: Experience) => void;
-    onDeleteExperience: (id: number) => void;
+
+    onDeleteExperience: (experienceId: number) => void;
 }
 
 function ExperienceSection({
@@ -17,6 +20,7 @@ function ExperienceSection({
 
     return (
         <section>
+
             <h2>Experience</h2>
 
             {experience.length === 0 ? (
@@ -27,7 +31,7 @@ function ExperienceSection({
                         key={item.id}
                         experience={item}
                         onUpdateExperience={onUpdateExperience}
-                        onDeleteExperience={onDeleteExperience}
+                        onDeleteExperience={() => onDeleteExperience(item.id)}
                     />
                 ))
             )}
@@ -35,6 +39,7 @@ function ExperienceSection({
             <button onClick={onAddExperience}>
                 Add Experience
             </button>
+
         </section>
     );
 }

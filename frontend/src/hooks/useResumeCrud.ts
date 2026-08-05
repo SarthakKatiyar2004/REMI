@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type {
     Resume,
+    Header,
     Project,
     Education,
     Experience,
@@ -11,7 +12,15 @@ import type {
 
 const initialResume: Resume = {
     id: 1,
-    name: "",
+
+    header: {
+        name: "",
+        email: "",
+        contact: "",
+        portfolio: "",
+        address: "",
+    },
+
     education: [],
     experience: [],
     projects: [],
@@ -41,12 +50,12 @@ function deleteSectionItem<T extends { id: number }>(
 export function useResumeCrud() {
     const [resume, setResume] = useState(initialResume);
 
-    const updateName = (name: string) => {
-        setResume((prev) => ({
-            ...prev,
-            name,
-        }));
-    };
+    function updateHeader(header: Header) {
+    setResume((prev) => ({
+        ...prev,
+        header,
+    }));
+    }
 
     const addProject = () => {
         setResume((prev) => ({
@@ -231,22 +240,28 @@ export function useResumeCrud() {
     };
 
     return {
-        resume,
-        updateName,
-        addProject,
-        updateProject,
-        deleteProject,
-        addEducation,
-        updateEducation,
-        deleteEducation,
-        addExperience,
-        updateExperience,
-        deleteExperience,
-        addCustomSection,
-        updateCustomSection,
-        deleteCustomSection,
-        addCustomEntry,
-        updateCustomEntry,
-        deleteCustomEntry,
+    resume,
+
+    updateHeader,
+
+    addEducation,
+    updateEducation,
+    deleteEducation,
+
+    addExperience,
+    updateExperience,
+    deleteExperience,
+
+    addProject,
+    updateProject,
+    deleteProject,
+
+    addCustomSection,
+    updateCustomSection,
+    deleteCustomSection,
+
+    addCustomEntry,
+    updateCustomEntry,
+    deleteCustomEntry,
     };
 }

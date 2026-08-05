@@ -4,7 +4,7 @@ import type { Experience } from "../../types/resume";
 interface ExperienceCardProps {
     experience: Experience;
     onUpdateExperience: (experience: Experience) => void;
-    onDeleteExperience: (id: number) => void;
+    onDeleteExperience: () => void;
 }
 
 function ExperienceCard({
@@ -15,87 +15,139 @@ function ExperienceCard({
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const [role, setRole] = useState(experience.role);
-    const [company, setCompany] = useState(experience.company);
-    const [from, setFrom] = useState(experience.from);
-    const [to, setTo] = useState(experience.to ?? "");
-    const [description, setDescription] = useState(experience.description);
+    const [editedExperience, setEditedExperience] = useState(experience);
 
-    const handleSave = () => {
-        onUpdateExperience({
-            ...experience,
-            role,
-            company,
-            from,
-            to: to || undefined,
-            description,
-        });
-
+    function handleSave() {
+        onUpdateExperience(editedExperience);
         setIsEditing(false);
-    };
+    }
 
-    const handleDelete = () => {
-        if (window.confirm("Delete this experience?")) {
-            onDeleteExperience(experience.id);
-        }
-    };
+    if (isEditing) {
+        return (
+            <div>
+
+                <input
+                    placeholder="Role Title"
+                    value={editedExperience.roleTitle}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            roleTitle: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Institute Name"
+                    value={editedExperience.instituteName}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            instituteName: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    type="month"
+                    value={editedExperience.fromDate}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            fromDate: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    type="month"
+                    value={editedExperience.toDate}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            toDate: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Location (Optional)"
+                    value={editedExperience.location ?? ""}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            location: e.target.value,
+                        })
+                    }
+                />
+
+                <textarea
+                    placeholder="Description"
+                    value={editedExperience.description}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            description: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Certificate Link (Optional)"
+                    value={editedExperience.certificateLink ?? ""}
+                    onChange={(e) =>
+                        setEditedExperience({
+                            ...editedExperience,
+                            certificateLink: e.target.value,
+                        })
+                    }
+                />
+
+                <button onClick={handleSave}>
+                    Save
+                </button>
+
+            </div>
+        );
+    }
 
     return (
         <div>
-            {isEditing ? (
-                <>
-                    <label>Role</label>
-                    <input
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    />
 
-                    <label>Company</label>
-                    <input
-                        value={company}
-                        onChange={(e) => setCompany(e.target.value)}
-                    />
+            <h3>{experience.roleTitle}</h3>
 
-                    <label>From</label>
-                    <input
-                        value={from}
-                        onChange={(e) => setFrom(e.target.value)}
-                    />
+            <p>{experience.instituteName}</p>
 
-                    <label>To</label>
-                    <input
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                    />
+            <p>
+                {experience.fromDate} - {experience.toDate}
+            </p>
 
-                    <label>Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-
-                    <button onClick={handleSave}>
-                        Save
-                    </button>
-                </>
-            ) : (
-                <>
-                    <h3>{experience.role}</h3>
-                    <p>{experience.company}</p>
-                    <p>
-                        {experience.from} - {experience.to ?? "Present"}
-                    </p>
-                    <p>{experience.description}</p>
-
-                    <button onClick={() => setIsEditing(true)}>
-                        Edit
-                    </button>
-
-                    <button onClick={handleDelete}>
-                        Delete
-                    </button>
-                </>
+            {experience.location && (
+                <p>{experience.location}</p>
             )}
+
+            <p>{experience.description}</p>
+
+            {experience.certificateLink && (
+                <a
+                    href={experience.certificateLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Certificate
+                </a>
+            )}
+
+            <br />
+
+            <button onClick={() => setIsEditing(true)}>
+                Edit
+            </button>
+
+            <button onClick={onDeleteExperience}>
+                Delete
+            </button>
+
         </div>
     );
 }

@@ -4,7 +4,7 @@ import type { Education } from "../../types/resume";
 interface EducationCardProps {
     education: Education;
     onUpdateEducation: (education: Education) => void;
-    onDeleteEducation: (educationId: number) => void;
+    onDeleteEducation: () => void;
 }
 
 function EducationCard({
@@ -15,115 +15,102 @@ function EducationCard({
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const [institute, setInstitute] = useState(education.institute);
-    const [from, setFrom] = useState(education.from);
-    const [to, setTo] = useState(education.to ?? "");
-    const [cgpa, setCgpa] = useState(
-        education.cgpa?.toString() ?? ""
-    );
+    const [editedEducation, setEditedEducation] = useState(education);
 
-    const handleSave = () => {
-
-        onUpdateEducation({
-            ...education,
-            institute,
-            from,
-            to: to || undefined,
-            cgpa: cgpa === "" ? undefined : Number(cgpa),
-        });
-
+    function handleSave() {
+        onUpdateEducation(editedEducation);
         setIsEditing(false);
-    };
+    }
 
-    const handleDelete = () => {
+    if (isEditing) {
+        return (
+            <div>
 
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this education entry?"
+                <input
+                    placeholder="Institute Name"
+                    value={editedEducation.instituteName}
+                    onChange={(e) =>
+                        setEditedEducation({
+                            ...editedEducation,
+                            instituteName: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="Degree Name"
+                    value={editedEducation.degreeName}
+                    onChange={(e) =>
+                        setEditedEducation({
+                            ...editedEducation,
+                            degreeName: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    type="month"
+                    value={editedEducation.fromDate}
+                    onChange={(e) =>
+                        setEditedEducation({
+                            ...editedEducation,
+                            fromDate: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    type="month"
+                    value={editedEducation.toDate}
+                    onChange={(e) =>
+                        setEditedEducation({
+                            ...editedEducation,
+                            toDate: e.target.value,
+                        })
+                    }
+                />
+
+                <input
+                    placeholder="CGPA (Optional)"
+                    value={editedEducation.cgpa ?? ""}
+                    onChange={(e) =>
+                        setEditedEducation({
+                            ...editedEducation,
+                            cgpa: e.target.value,
+                        })
+                    }
+                />
+
+                <button onClick={handleSave}>
+                    Save
+                </button>
+
+            </div>
         );
-
-        if (!confirmed) {
-            return;
-        }
-
-        onDeleteEducation(education.id);
-    };
+    }
 
     return (
         <div>
 
-            {isEditing ? (
-                <>
+            <h3>{education.degreeName}</h3>
 
-                    <label>Institute</label>
+            <p>{education.instituteName}</p>
 
-                    <input
-                        value={institute}
-                        onChange={(e) =>
-                            setInstitute(e.target.value)
-                        }
-                    />
+            <p>
+                {education.fromDate} - {education.toDate}
+            </p>
 
-                    <label>From</label>
-
-                    <input
-                        value={from}
-                        onChange={(e) =>
-                            setFrom(e.target.value)
-                        }
-                    />
-
-                    <label>To</label>
-
-                    <input
-                        value={to}
-                        onChange={(e) =>
-                            setTo(e.target.value)
-                        }
-                    />
-
-                    <label>CGPA</label>
-
-                    <input
-                        type="number"
-                        step="0.01"
-                        value={cgpa}
-                        onChange={(e) =>
-                            setCgpa(e.target.value)
-                        }
-                    />
-
-                    <button onClick={handleSave}>
-                        Save
-                    </button>
-
-                </>
-            ) : (
-                <>
-
-                    <h3>{education.institute}</h3>
-
-                    <p>
-                        {education.from} - {education.to ?? "Present"}
-                    </p>
-
-                    {education.cgpa !== undefined && (
-                        <p>
-                            CGPA: {education.cgpa}
-                        </p>
-                    )}
-
-                    <button
-                        onClick={() => setIsEditing(true)}
-                    >
-                        Edit
-                    </button>
-
-                    <button onClick={handleDelete}>
-                        Delete
-                    </button>
-
-                </>
+            {education.cgpa && (
+                <p>CGPA : {education.cgpa}</p>
             )}
+
+            <button onClick={() => setIsEditing(true)}>
+                Edit
+            </button>
+
+            <button onClick={onDeleteEducation}>
+                Delete
+            </button>
 
         </div>
     );

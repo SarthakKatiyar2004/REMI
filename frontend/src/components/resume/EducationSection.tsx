@@ -31,7 +31,7 @@ function EducationSection({
                         key={item.id}
                         education={item}
                         onUpdateEducation={onUpdateEducation}
-                        onDeleteEducation={onDeleteEducation}
+                        onDeleteEducation={() => onDeleteEducation(item.id)}
                     />
                 ))
             )}
