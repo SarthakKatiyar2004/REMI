@@ -62,7 +62,7 @@ function ProjectCard({
 
     if (isEditing) {
         return (
-            <div>
+            <div className="entry-card entry-card--editing">
 
                 <FormInput
                     placeholder="Project Title"
@@ -77,7 +77,6 @@ function ProjectCard({
                     }
                 />
 
-
                 <FormTextArea
                     placeholder="Description"
                     value={
@@ -91,43 +90,45 @@ function ProjectCard({
                     }
                 />
 
+                <div className="form-grid">
 
-                <FormInput
-                    placeholder="Codebase Link (Optional)"
-                    value={
-                        editedProject.codebaseLink ?? ""
-                    }
-                    onChange={(value) =>
-                        updateField(
-                            "codebaseLink",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        placeholder="Codebase Link (Optional)"
+                        value={
+                            editedProject.codebaseLink ?? ""
+                        }
+                        onChange={(value) =>
+                            updateField(
+                                "codebaseLink",
+                                value
+                            )
+                        }
+                    />
 
+                    <FormInput
+                        placeholder="Demo Link (Optional)"
+                        value={
+                            editedProject.demoLink ?? ""
+                        }
+                        onChange={(value) =>
+                            updateField(
+                                "demoLink",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    placeholder="Demo Link (Optional)"
-                    value={
-                        editedProject.demoLink ?? ""
-                    }
-                    onChange={(value) =>
-                        updateField(
-                            "demoLink",
-                            value
-                        )
-                    }
-                />
+                </div>
 
+                <div className="entry-form-actions">
+                    <button type="button" className="btn-primary" onClick={handleSave}>
+                        Save
+                    </button>
 
-                <button onClick={handleSave}>
-                    Save
-                </button>
-
-
-                <button onClick={handleCancel}>
-                    Cancel
-                </button>
+                    <button type="button" className="btn-secondary" onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </div>
 
             </div>
         );
@@ -135,45 +136,37 @@ function ProjectCard({
 
 
     return (
-        <div>
+        <div className="entry-card">
 
             <h3>
                 {project.projectTitle}
             </h3>
 
-
             <p>
                 {project.description}
             </p>
 
+            <div>
+                {project.codebaseLink && (
+                    <a
+                        href={project.codebaseLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Codebase
+                    </a>
+                )}
 
-            {project.codebaseLink && (
-                <a
-                    href={project.codebaseLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Codebase
-                </a>
-            )}
-
-
-            <br />
-
-
-            {project.demoLink && (
-                <a
-                    href={project.demoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Demo
-                </a>
-            )}
-
-
-            <br />
-
+                {project.demoLink && (
+                    <a
+                        href={project.demoLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Demo
+                    </a>
+                )}
+            </div>
 
             <CardActions
                 onEdit={startEditing}

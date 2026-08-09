@@ -16,6 +16,7 @@ function FormTextArea({
 
     return (
         <textarea
+            className="form-textarea"
             placeholder={placeholder}
             value={value}
             onChange={(e) =>

@@ -18,7 +18,11 @@ const emptyResumePayload: ResumePayload = {
   customSections: [],
 };
 
-function Dashboard() {
+interface DashboardProps {
+  onBackToHome: () => void;
+}
+
+function Dashboard({ onBackToHome }: DashboardProps) {
   const [resume, setResume] = useState<Resume | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,15 +47,25 @@ function Dashboard() {
     loadResume();
   }, []);
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  return (
+    <div className="app-shell">
+      <header className="top-bar">
+        <button type="button" className="brand-mark" onClick={onBackToHome}>
+          REMI
+        </button>
+      </header>
 
-  if (!resume) {
-    return <p>Loading resume...</p>;
-  }
+      <main className="page-content">
+        {error && <p className="form-message form-message--error">{error}</p>}
 
-  return <ResumeEditor initialResume={resume} />;
+        {!error && !resume && (
+          <p className="loading-text">Loading your resume…</p>
+        )}
+
+        {!error && resume && <ResumeEditor initialResume={resume} />}
+      </main>
+    </div>
+  );
 }
 
 export default Dashboard;

@@ -56,7 +56,7 @@ function CustomEntryCard({
 
     if (isEditing) {
         return (
-            <div>
+            <div className="entry-card entry-card--editing">
 
                 <FormInput
                     placeholder="Title (Optional)"
@@ -91,20 +91,22 @@ function CustomEntryCard({
                     }
                 />
 
-                <button onClick={handleSave}>
-                    Save
-                </button>
+                <div className="entry-form-actions">
+                    <button type="button" className="btn-primary" onClick={handleSave}>
+                        Save
+                    </button>
 
-                <button onClick={handleCancel}>
-                    Cancel
-                </button>
+                    <button type="button" className="btn-secondary" onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </div>
 
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="entry-card">
 
             {entry.title && (
                 <h4>{entry.title}</h4>
@@ -123,8 +125,6 @@ function CustomEntryCard({
                     Open Link
                 </a>
             )}
-
-            <br />
 
             <CardActions
                 onEdit={startEditing}

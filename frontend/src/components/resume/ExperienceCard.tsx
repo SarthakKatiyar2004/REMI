@@ -56,64 +56,81 @@ function ExperienceCard({
 
     if (isEditing) {
         return (
-            <div>
+            <div className="entry-card entry-card--editing">
 
-                <FormInput
-                    placeholder="Role Title"
-                    value={editedExperience.roleTitle}
-                    onChange={(value) =>
-                        updateField(
-                            "roleTitle",
-                            value
-                        )
-                    }
-                />
+                <div className="form-grid">
 
-                <FormInput
-                    placeholder="Institute Name"
-                    value={editedExperience.instituteName}
-                    onChange={(value) =>
-                        updateField(
-                            "instituteName",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        placeholder="Role Title"
+                        value={editedExperience.roleTitle}
+                        onChange={(value) =>
+                            updateField(
+                                "roleTitle",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    type="month"
-                    value={editedExperience.fromDate}
-                    onChange={(value) =>
-                        updateField(
-                            "fromDate",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        placeholder="Institute Name"
+                        value={editedExperience.instituteName}
+                        onChange={(value) =>
+                            updateField(
+                                "instituteName",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    type="month"
-                    value={editedExperience.toDate}
-                    onChange={(value) =>
-                        updateField(
-                            "toDate",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        type="month"
+                        value={editedExperience.fromDate}
+                        onChange={(value) =>
+                            updateField(
+                                "fromDate",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    placeholder="Location (Optional)"
-                    value={
-                        editedExperience.location ?? ""
-                    }
-                    onChange={(value) =>
-                        updateField(
-                            "location",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        type="month"
+                        value={editedExperience.toDate}
+                        onChange={(value) =>
+                            updateField(
+                                "toDate",
+                                value
+                            )
+                        }
+                    />
+
+                    <FormInput
+                        placeholder="Location (Optional)"
+                        value={
+                            editedExperience.location ?? ""
+                        }
+                        onChange={(value) =>
+                            updateField(
+                                "location",
+                                value
+                            )
+                        }
+                    />
+
+                    <FormInput
+                        placeholder="Certificate Link (Optional)"
+                        value={
+                            editedExperience.certificateLink ?? ""
+                        }
+                        onChange={(value) =>
+                            updateField(
+                                "certificateLink",
+                                value
+                            )
+                        }
+                    />
+
+                </div>
 
                 <FormTextArea
                     placeholder="Description"
@@ -126,33 +143,22 @@ function ExperienceCard({
                     }
                 />
 
-                <FormInput
-                    placeholder="Certificate Link (Optional)"
-                    value={
-                        editedExperience.certificateLink ?? ""
-                    }
-                    onChange={(value) =>
-                        updateField(
-                            "certificateLink",
-                            value
-                        )
-                    }
-                />
+                <div className="entry-form-actions">
+                    <button type="button" className="btn-primary" onClick={handleSave}>
+                        Save
+                    </button>
 
-                <button onClick={handleSave}>
-                    Save
-                </button>
-
-                <button onClick={handleCancel}>
-                    Cancel
-                </button>
+                    <button type="button" className="btn-secondary" onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </div>
 
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="entry-card">
 
             <h3>
                 {experience.roleTitle}
@@ -162,17 +168,12 @@ function ExperienceCard({
                 {experience.instituteName}
             </p>
 
-            <p>
+            <p className="entry-meta">
                 {experience.fromDate}
-                {" - "}
+                {" – "}
                 {experience.toDate}
+                {experience.location && ` · ${experience.location}`}
             </p>
-
-            {experience.location && (
-                <p>
-                    {experience.location}
-                </p>
-            )}
 
             <p>
                 {experience.description}
@@ -187,8 +188,6 @@ function ExperienceCard({
                     Certificate
                 </a>
             )}
-
-            <br />
 
             <CardActions
                 onEdit={startEditing}

@@ -19,6 +19,7 @@ function FormInput({
 
     return (
         <input
+            className="form-input"
             type={type}
             placeholder={placeholder}
             value={value}

@@ -28,36 +28,40 @@ function ExperienceSection({
         useState(false);
 
     return (
-        <section>
+        <section className="section-card">
 
             <h2>Experience</h2>
 
             {experience.length === 0 ? (
-                <p>
+                <p className="empty-state">
                     No experience added.
                 </p>
             ) : (
-                experience.map((item) => (
-                    <ExperienceCard
-                        key={item.id}
-                        experience={item}
-                        onUpdateExperience={
-                            onUpdateExperience
-                        }
-                        onDeleteExperience={() =>
-                            onDeleteExperience(
-                                item.id
-                            )
-                        }
-                        onEditStateChange={
-                            setIsEditing
-                        }
-                    />
-                ))
+                <div className="entry-list">
+                    {experience.map((item) => (
+                        <ExperienceCard
+                            key={item.id}
+                            experience={item}
+                            onUpdateExperience={
+                                onUpdateExperience
+                            }
+                            onDeleteExperience={() =>
+                                onDeleteExperience(
+                                    item.id
+                                )
+                            }
+                            onEditStateChange={
+                                setIsEditing
+                            }
+                        />
+                    ))}
+                </div>
             )}
 
             {!isEditing && (
                 <button
+                    type="button"
+                    className="btn-secondary"
                     onClick={onAddExperience}
                 >
                     Add Experience

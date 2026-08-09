@@ -55,77 +55,83 @@ function EducationCard({
 
     if (isEditing) {
         return (
-            <div>
+            <div className="entry-card entry-card--editing">
 
-                <FormInput
-                    placeholder="Institute Name"
-                    value={editedEducation.instituteName}
-                    onChange={(value) =>
-                        updateField(
-                            "instituteName",
-                            value
-                        )
-                    }
-                />
+                <div className="form-grid">
 
-                <FormInput
-                    placeholder="Degree Name"
-                    value={editedEducation.degreeName}
-                    onChange={(value) =>
-                        updateField(
-                            "degreeName",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        placeholder="Institute Name"
+                        value={editedEducation.instituteName}
+                        onChange={(value) =>
+                            updateField(
+                                "instituteName",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    type="month"
-                    value={editedEducation.fromDate}
-                    onChange={(value) =>
-                        updateField(
-                            "fromDate",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        placeholder="Degree Name"
+                        value={editedEducation.degreeName}
+                        onChange={(value) =>
+                            updateField(
+                                "degreeName",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    type="month"
-                    value={editedEducation.toDate}
-                    onChange={(value) =>
-                        updateField(
-                            "toDate",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        type="month"
+                        value={editedEducation.fromDate}
+                        onChange={(value) =>
+                            updateField(
+                                "fromDate",
+                                value
+                            )
+                        }
+                    />
 
-                <FormInput
-                    placeholder="CGPA (Optional)"
-                    value={editedEducation.cgpa ?? ""}
-                    onChange={(value) =>
-                        updateField(
-                            "cgpa",
-                            value
-                        )
-                    }
-                />
+                    <FormInput
+                        type="month"
+                        value={editedEducation.toDate}
+                        onChange={(value) =>
+                            updateField(
+                                "toDate",
+                                value
+                            )
+                        }
+                    />
 
-                <button onClick={handleSave}>
-                    Save
-                </button>
+                    <FormInput
+                        placeholder="CGPA (Optional)"
+                        value={editedEducation.cgpa ?? ""}
+                        onChange={(value) =>
+                            updateField(
+                                "cgpa",
+                                value
+                            )
+                        }
+                    />
 
-                <button onClick={handleCancel}>
-                    Cancel
-                </button>
+                </div>
+
+                <div className="entry-form-actions">
+                    <button type="button" className="btn-primary" onClick={handleSave}>
+                        Save
+                    </button>
+
+                    <button type="button" className="btn-secondary" onClick={handleCancel}>
+                        Cancel
+                    </button>
+                </div>
 
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="entry-card">
 
             <h3>
                 {education.degreeName}
@@ -135,15 +141,15 @@ function EducationCard({
                 {education.instituteName}
             </p>
 
-            <p>
+            <p className="entry-meta">
                 {education.fromDate}
-                {" - "}
+                {" – "}
                 {education.toDate}
             </p>
 
             {education.cgpa && (
                 <p>
-                    CGPA : {education.cgpa}
+                    CGPA: {education.cgpa}
                 </p>
             )}
 

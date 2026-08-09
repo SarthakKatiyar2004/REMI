@@ -79,7 +79,7 @@ function CustomSectionCard({
     }
 
     return (
-        <div>
+        <div className={`entry-card ${isEditing ? "entry-card--editing" : ""}`}>
 
             {isEditing ? (
                 <>
@@ -94,13 +94,15 @@ function CustomSectionCard({
                         }
                     />
 
-                    <button onClick={handleSave}>
-                        Save
-                    </button>
+                    <div className="entry-form-actions">
+                        <button type="button" className="btn-primary" onClick={handleSave}>
+                            Save
+                        </button>
 
-                    <button onClick={handleCancel}>
-                        Cancel
-                    </button>
+                        <button type="button" className="btn-secondary" onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    </div>
                 </>
             ) : (
                 <>
@@ -113,34 +115,40 @@ function CustomSectionCard({
                 </>
             )}
 
-            {section.entries.map((entry) => (
-                <CustomEntryCard
-                    key={entry.id}
-                    entry={entry}
-                    onUpdateEntry={(updatedEntry) =>
-                        onUpdateEntry(
-                            section.id,
-                            updatedEntry
-                        )
-                    }
-                    onDeleteEntry={() =>
-                        onDeleteEntry(
-                            section.id,
-                            entry.id
-                        )
-                    }
-                    onEditStateChange={
-                        setIsEntryEditing
-                    }
-                />
-            ))}
+            {section.entries.length > 0 && (
+                <div className="custom-entry-list">
+                    {section.entries.map((entry) => (
+                        <CustomEntryCard
+                            key={entry.id}
+                            entry={entry}
+                            onUpdateEntry={(updatedEntry) =>
+                                onUpdateEntry(
+                                    section.id,
+                                    updatedEntry
+                                )
+                            }
+                            onDeleteEntry={() =>
+                                onDeleteEntry(
+                                    section.id,
+                                    entry.id
+                                )
+                            }
+                            onEditStateChange={
+                                setIsEntryEditing
+                            }
+                        />
+                    ))}
+                </div>
+            )}
 
             {!isEditing &&
                 !isEntryEditing && (
                     <button
+                        type="button"
+                        className="btn-ghost"
                         onClick={onAddEntry}
                     >
-                        Add Entry
+                        + Add Entry
                     </button>
                 )}
 

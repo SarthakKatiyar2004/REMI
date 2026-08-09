@@ -14,3 +14,5 @@ typing_extensions==4.16.0
 uvicorn==0.51.0
 httpx==0.28.1
 pytest==8.4.2
+pypdf==5.1.0
+python-multipart==0.0.20

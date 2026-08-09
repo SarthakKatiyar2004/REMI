@@ -1,9 +1,495 @@
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #575757;
+/* =======================================================
+   REMI — design tokens
+   Warm, soft, paper-like palette. A muted brick/rosewood
+   accent (deliberately dialed back from the usual bright
+   terracotta) stands in for "relevance" — the same color
+   that will later mark matched keywords from a JD.
+   ======================================================= */
+
+:root {
+  --color-bg: #fbf3ea;
+  --color-bg-soft: #f5e6d6;
+  --color-surface: #fffcf7;
+  --color-surface-alt: #f8efe4;
+  --color-border: #e8d8c3;
+  --color-border-soft: #f0e2cf;
+
+  --color-text: #382d27;
+  --color-text-muted: #8a7768;
+  --color-text-faint: #b3a191;
+
+  --color-accent: #a2543f;
+  --color-accent-dark: #813f2e;
+  --color-accent-soft: #ecc9b8;
+  --color-accent-tint: #f6e2d6;
+
+  --color-success: #5c7a4f;
+  --color-success-tint: #e6ede0;
+  --color-error: #b23b2b;
+  --color-error-tint: #f6e0da;
+
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --shadow-soft: 0 1px 2px rgba(56, 45, 39, 0.04), 0 8px 24px rgba(56, 45, 39, 0.06);
+  --shadow-lift: 0 2px 4px rgba(56, 45, 39, 0.05), 0 16px 40px rgba(56, 45, 39, 0.1);
 }
 
-h1 {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0 0 0.4em 0;
+}
+
+p {
+  margin: 0 0 0.75em 0;
+}
+
+a {
+  color: var(--color-accent-dark);
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* =======================================================
+   Landing page
+   ======================================================= */
+
+.landing {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  background:
+    radial-gradient(60% 50% at 18% 12%, var(--color-bg-soft) 0%, transparent 60%),
+    radial-gradient(55% 45% at 85% 88%, var(--color-accent-tint) 0%, transparent 65%),
+    var(--color-bg);
+}
+
+.landing-content {
+  max-width: 620px;
   text-align: center;
+  animation: landing-rise 0.7s ease both;
+}
+
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 18px;
+}
+
+.landing-title {
+  font-size: clamp(3.2rem, 9vw, 5.5rem);
+  line-height: 1;
+  margin-bottom: 22px;
+}
+
+.landing-title-highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+}
+
+.landing-title-highlight::after {
+  content: "";
+  position: absolute;
+  left: -0.06em;
+  right: -0.08em;
+  bottom: 0.1em;
+  height: 0.3em;
+  background: var(--color-accent-soft);
+  border-radius: 3px;
+  transform: rotate(-1.2deg);
+  z-index: -1;
+}
+
+.landing-description {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  max-width: 480px;
+  margin: 0 auto 34px auto;
+}
+
+.landing-cta {
+  font-size: 1rem;
+  padding: 14px 34px;
+}
+
+/* =======================================================
+   Buttons
+   ======================================================= */
+
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-danger {
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff8f2;
+  padding: 10px 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 8px 18px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: 6px 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-ghost:hover {
+  color: var(--color-accent-dark);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-error);
+  padding: 8px 14px;
+}
+
+.btn-danger:hover {
+  background: var(--color-error-tint);
+}
+
+/* =======================================================
+   App shell / editor page
+   ======================================================= */
+
+.app-shell {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+}
+
+.brand-mark {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-text);
+  padding: 0;
+}
+
+.page-content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 96px 24px;
+}
+
+.loading-text {
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 60px;
+}
+
+.editor-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.editor-header h1 {
+  font-size: 1.9rem;
+}
+
+.editor-intro {
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+.save-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+/* =======================================================
+   Section cards
+   ======================================================= */
+
+.section-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 28px 28px 24px 28px;
+  margin-bottom: 24px;
+}
+
+.section-card h2 {
+  font-size: 1.25rem;
+}
+
+.section-hint {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  margin-top: -6px;
+  margin-bottom: 18px;
+}
+
+.empty-state {
+  color: var(--color-text-faint);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* =======================================================
+   Forms
+   ======================================================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-grid--single {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  margin-bottom: 10px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+.form-textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: var(--font-body);
+}
+
+.form-message {
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+.form-message--error {
+  background: var(--color-error-tint);
+  color: var(--color-error);
+}
+
+.form-message--success {
+  background: var(--color-success-tint);
+  color: var(--color-success);
+}
+
+/* =======================================================
+   Entry cards (education / experience / project / custom)
+   ======================================================= */
+
+.entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.entry-card {
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.entry-card--editing {
+  background: var(--color-surface);
+  border-color: var(--color-accent-soft);
+}
+
+.entry-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+
+.entry-card h4 {
+  font-size: 0.98rem;
+  margin-bottom: 2px;
+}
+
+.entry-card p {
+  font-size: 0.94rem;
+  color: var(--color-text-muted);
+  margin: 0 0 4px 0;
+}
+
+.entry-card a {
+  font-size: 0.9rem;
+  margin-right: 14px;
+}
+
+.entry-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  margin-bottom: 6px;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.entry-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.custom-entry-list {
+  margin-top: 14px;
+  padding-left: 16px;
+  border-left: 2px solid var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =======================================================
+   JD upload
+   ======================================================= */
+
+.dropzone {
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dropzone:hover {
+  border-color: var(--color-accent);
+}
+
+.dropzone--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-tint);
+}
+
+.dropzone--error {
+  border-color: var(--color-error);
+}
+
+.dropzone-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.dropzone-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  margin-bottom: 0;
+}
+
+.dropzone p {
+  margin-bottom: 0;
 }

@@ -3,6 +3,7 @@ import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 import ProjectSection from "./ProjectSection";
 import CustomSections from "./CustomSections";
+import JDUpload from "../jd/JDUpload";
 import { useResumeCrud } from "../../hooks/useResumeCrud";
 import type { Resume } from "../../types/resume";
 
@@ -41,17 +42,28 @@ function ResumeEditor({ initialResume }: ResumeEditorProps) {
 
     return (
         <div>
-            <h1>Start Creating Your Resume</h1>
+            <div className="editor-header">
+                <h1>Your Master Resume</h1>
+            </div>
+            <p className="editor-intro">
+                Fill this in once — REMI will draw from it to build a
+                version tailored to each role you upload a job description for.
+            </p>
 
-            <button
-                type="button"
-                onClick={saveResume}
-                disabled={isSaving}
-            >
-                {isSaving ? "Saving..." : "Save Resume"}
-            </button>
+            <div className="save-bar">
+                <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={saveResume}
+                    disabled={isSaving}
+                >
+                    {isSaving ? "Saving…" : "Save Resume"}
+                </button>
+            </div>
 
-            {saveError && <p>{saveError}</p>}
+            {saveError && (
+                <p className="form-message form-message--error">{saveError}</p>
+            )}
 
             <HeaderSection
                 header={resume.header}
@@ -88,6 +100,8 @@ function ResumeEditor({ initialResume }: ResumeEditorProps) {
                 onUpdateEntry={updateCustomEntry}
                 onDeleteEntry={deleteCustomEntry}
             />
+
+            <JDUpload />
         </div>
     );
 }

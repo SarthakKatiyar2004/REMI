@@ -28,36 +28,40 @@ function ProjectSection({
         useState(false);
 
     return (
-        <section>
+        <section className="section-card">
 
             <h2>Projects</h2>
 
             {projects.length === 0 ? (
-                <p>
+                <p className="empty-state">
                     No projects added.
                 </p>
             ) : (
-                projects.map((item) => (
-                    <ProjectCard
-                        key={item.id}
-                        project={item}
-                        onUpdateProject={
-                            onUpdateProject
-                        }
-                        onDeleteProject={() =>
-                            onDeleteProject(
-                                item.id
-                            )
-                        }
-                        onEditStateChange={
-                            setIsEditing
-                        }
-                    />
-                ))
+                <div className="entry-list">
+                    {projects.map((item) => (
+                        <ProjectCard
+                            key={item.id}
+                            project={item}
+                            onUpdateProject={
+                                onUpdateProject
+                            }
+                            onDeleteProject={() =>
+                                onDeleteProject(
+                                    item.id
+                                )
+                            }
+                            onEditStateChange={
+                                setIsEditing
+                            }
+                        />
+                    ))}
+                </div>
             )}
 
             {!isEditing && (
                 <button
+                    type="button"
+                    className="btn-secondary"
                     onClick={onAddProject}
                 >
                     Add Project

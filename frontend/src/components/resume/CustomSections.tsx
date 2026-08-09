@@ -49,47 +49,51 @@ function CustomSections({
         useState(false);
 
     return (
-        <section>
+        <section className="section-card">
 
             <h2>Custom Sections</h2>
 
             {sections.length === 0 ? (
-                <p>
+                <p className="empty-state">
                     No custom sections added.
                 </p>
             ) : (
-                sections.map((section) => (
-                    <CustomSectionCard
-                        key={section.id}
-                        section={section}
-                        onUpdateSection={
-                            onUpdateSection
-                        }
-                        onDeleteSection={() =>
-                            onDeleteSection(
-                                section.id
-                            )
-                        }
-                        onAddEntry={() =>
-                            onAddEntry(
-                                section.id
-                            )
-                        }
-                        onUpdateEntry={
-                            onUpdateEntry
-                        }
-                        onDeleteEntry={
-                            onDeleteEntry
-                        }
-                        onEditStateChange={
-                            setIsEditing
-                        }
-                    />
-                ))
+                <div className="entry-list">
+                    {sections.map((section) => (
+                        <CustomSectionCard
+                            key={section.id}
+                            section={section}
+                            onUpdateSection={
+                                onUpdateSection
+                            }
+                            onDeleteSection={() =>
+                                onDeleteSection(
+                                    section.id
+                                )
+                            }
+                            onAddEntry={() =>
+                                onAddEntry(
+                                    section.id
+                                )
+                            }
+                            onUpdateEntry={
+                                onUpdateEntry
+                            }
+                            onDeleteEntry={
+                                onDeleteEntry
+                            }
+                            onEditStateChange={
+                                setIsEditing
+                            }
+                        />
+                    ))}
+                </div>
             )}
 
             {!isEditing && (
                 <button
+                    type="button"
+                    className="btn-secondary"
                     onClick={onAddSection}
                 >
                     Add Section

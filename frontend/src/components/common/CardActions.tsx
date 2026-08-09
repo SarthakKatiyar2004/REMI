@@ -19,13 +19,13 @@ function CardActions({
     }
 
     return (
-        <div>
+        <div className="entry-actions">
 
-            <button onClick={onEdit}>
+            <button type="button" className="btn-secondary" onClick={onEdit}>
                 Edit
             </button>
 
-            <button onClick={handleDelete}>
+            <button type="button" className="btn-danger" onClick={handleDelete}>
                 Delete
             </button>
 
