@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { updateResume } from "../api/resumeApi";
 
 import type {
     Resume,
@@ -19,24 +20,6 @@ import {
 } from "../utils/resumeFactories";
 
 
-const initialResume: Resume = {
-    id: 1,
-
-    header: {
-        name: "",
-        email: "",
-        contact: "",
-        portfolio: "",
-        address: "",
-    },
-
-    education: [],
-    experience: [],
-    projects: [],
-    customSections: [],
-};
-
-
 type ResumeSectionArrays = {
     education: Education[];
     experience: Experience[];
@@ -45,9 +28,27 @@ type ResumeSectionArrays = {
 };
 
 
-export function useResumeCrud() {
+export function useResumeCrud(initialResume: Resume) {
 
     const [resume, setResume] = useState(initialResume);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
+
+    async function saveResume() {
+        setIsSaving(true);
+        setSaveError(null);
+
+        try {
+            const { id, ...resumePayload } = resume;
+            const savedResume = await updateResume(id, resumePayload);
+            setResume(savedResume);
+        } catch (error) {
+            console.error(error);
+            setSaveError("Unable to save resume.");
+        } finally {
+            setIsSaving(false);
+        }
+    }
 
 
     function updateHeader(header: Header) {
@@ -363,6 +364,9 @@ export function useResumeCrud() {
     return {
 
         resume,
+        saveResume,
+        isSaving,
+        saveError,
 
         updateHeader,
 
