@@ -1,19 +1,21 @@
-#Python
+# Python
 __pycache__/
 *.py[cod]
+*.sqlite
 *.sqlite3
+*.db
 .venv/
 venv/
 .env
 
-#Node
+# Node
 node_modules/
 dist/
 
-#IDE
+# IDE
 .vscode/
 .idea/
 
-#OS
+# OS
 .DS_Store
 Thumbs.db
