@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional
+from pydantic import BaseModel, Field, ConfigDict, model_validator
+from typing import Any, Optional
 
 
 # =========================
@@ -222,44 +222,74 @@ class ResumeCreate(BaseModel):
     )
 
 
+class ResumeUpdate(ResumeCreate):
+    pass
+
 
 class ResumeResponse(BaseModel):
 
     id: int
 
-    name: str
-
-    email: str
-
-    contact: str
-
-    portfolio: Optional[str] = None
-
-    address: Optional[str] = None
-
+    header: HeaderBase
 
     education: list[EducationResponse] = Field(
         default_factory=list
     )
 
-
     experience: list[ExperienceResponse] = Field(
         default_factory=list
     )
 
-
     projects: list[ProjectResponse] = Field(
         default_factory=list
     )
-
 
     custom_sections: list[CustomSectionResponse] = Field(
         default_factory=list,
         alias="customSections"
     )
 
-
     model_config = ConfigDict(
         from_attributes=True,
         populate_by_name=True
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def nest_header_from_orm(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "header" in data:
+                return data
+
+            return {
+                "id": data["id"],
+                "header": {
+                    "name": data.get("name", ""),
+                    "email": data.get("email", ""),
+                    "contact": data.get("contact", ""),
+                    "portfolio": data.get("portfolio"),
+                    "address": data.get("address"),
+                },
+                "education": data.get("education", []),
+                "experience": data.get("experience", []),
+                "projects": data.get("projects", []),
+                "custom_sections": data.get(
+                    "custom_sections",
+                    data.get("customSections", []),
+                ),
+            }
+
+        return {
+            "id": data.id,
+            "header": {
+                "name": data.name or "",
+                "email": data.email or "",
+                "contact": data.contact or "",
+                "portfolio": data.portfolio,
+                "address": data.address,
+            },
+            "education": data.education,
+            "experience": data.experience,
+            "projects": data.projects,
+            "custom_sections": data.custom_sections,
+        }
