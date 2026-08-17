@@ -5,18 +5,22 @@ import ProjectSection from "./ProjectSection";
 import CustomSections from "./CustomSections";
 import JDUpload from "../jd/JDUpload";
 import { useResumeCrud } from "../../hooks/useResumeCrud";
+import { tailorResume } from "../../api/tailorApi";
+import { useState } from "react";
 import type { Resume } from "../../types/resume";
 
 interface ResumeEditorProps {
     initialResume: Resume;
+    onTailoredPreview: (tailoredResume: Resume) => void;
 }
 
-function ResumeEditor({ initialResume }: ResumeEditorProps) {
+function ResumeEditor({ initialResume, onTailoredPreview }: ResumeEditorProps) {
     const {
         resume,
         saveResume,
         isSaving,
         saveError,
+        saveSuccess,
         updateHeader,
 
         addEducation,
@@ -39,6 +43,25 @@ function ResumeEditor({ initialResume }: ResumeEditorProps) {
         updateCustomEntry,
         deleteCustomEntry,
     } = useResumeCrud(initialResume);
+
+    const [jdText, setJdText] = useState<string | null>(null);
+    const [isTailoring, setIsTailoring] = useState(false);
+    const [tailorError, setTailorError] = useState<string | null>(null);
+
+    async function handleTailor() {
+        if (!jdText) return;
+        setIsTailoring(true);
+        setTailorError(null);
+        try {
+            const tailored = await tailorResume(resume.id, jdText);
+            onTailoredPreview(tailored);
+        } catch (error) {
+            console.error(error);
+            setTailorError("Failed to tailor resume. Make sure your Gemini API key is configured.");
+        } finally {
+            setIsTailoring(false);
+        }
+    }
 
     return (
         <div>
@@ -63,6 +86,10 @@ function ResumeEditor({ initialResume }: ResumeEditorProps) {
 
             {saveError && (
                 <p className="form-message form-message--error">{saveError}</p>
+            )}
+
+            {saveSuccess && (
+                <p className="form-message form-message--success">Resume saved successfully!</p>
             )}
 
             <HeaderSection
@@ -101,7 +128,28 @@ function ResumeEditor({ initialResume }: ResumeEditorProps) {
                 onDeleteEntry={deleteCustomEntry}
             />
 
-            <JDUpload />
+            <JDUpload onUploadSuccess={setJdText} />
+
+            {jdText && (
+                <section className="section-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h2>Ready to Tailor?</h2>
+                    <p className="section-hint">We have your Job Description ready. Click below to generate your tailored resume!</p>
+                    
+                    {tailorError && (
+                        <p className="form-message form-message--error">{tailorError}</p>
+                    )}
+
+                    <button 
+                        type="button" 
+                        className="btn-primary" 
+                        onClick={handleTailor} 
+                        disabled={isTailoring}
+                        style={{ marginTop: '1rem', padding: '1rem 2rem', fontSize: '1.2rem' }}
+                    >
+                        {isTailoring ? "Tailoring with Gemini..." : "✨ Tailor Resume"}
+                    </button>
+                </section>
+            )}
         </div>
     );
 }

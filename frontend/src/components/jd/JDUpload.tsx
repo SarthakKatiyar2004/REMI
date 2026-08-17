@@ -7,7 +7,11 @@ const MAX_FILE_SIZE_LABEL = "5MB";
 
 type Status = "idle" | "uploading" | "success" | "error";
 
-function JDUpload() {
+interface JDUploadProps {
+    onUploadSuccess?: (text: string | null) => void;
+}
+
+function JDUpload({ onUploadSuccess }: JDUploadProps) {
     const [status, setStatus] = useState<Status>("idle");
     const [fileName, setFileName] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
@@ -56,6 +60,10 @@ function JDUpload() {
             setPageCount(response.pageCount);
             setStatus(response.isTextBased ? "success" : "error");
             setMessage(response.message);
+            
+            if (response.isTextBased && response.extractedText) {
+                onUploadSuccess?.(response.extractedText);
+            }
         } catch (err) {
             console.error(err);
             setStatus("error");
@@ -83,6 +91,7 @@ function JDUpload() {
         setFileName(null);
         setMessage(null);
         setPageCount(null);
+        onUploadSuccess?.(null);
 
         if (inputRef.current) {
             inputRef.current.value = "";

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import ResumeEditor from "../components/resume/ResumeEditor";
+import ResumePreview from "../components/resume/ResumePreview";
 import { createResume, getResumes, type ResumePayload } from "../api/resumeApi";
 import type { Resume } from "../types/resume";
 
@@ -24,6 +25,7 @@ interface DashboardProps {
 
 function Dashboard({ onBackToHome }: DashboardProps) {
   const [resume, setResume] = useState<Resume | null>(null);
+  const [tailoredResume, setTailoredResume] = useState<Resume | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -62,7 +64,19 @@ function Dashboard({ onBackToHome }: DashboardProps) {
           <p className="loading-text">Loading your resume…</p>
         )}
 
-        {!error && resume && <ResumeEditor initialResume={resume} />}
+        {!error && resume && !tailoredResume && (
+          <ResumeEditor 
+            initialResume={resume} 
+            onTailoredPreview={setTailoredResume}
+          />
+        )}
+
+        {tailoredResume && (
+          <ResumePreview 
+            resume={tailoredResume} 
+            onBack={() => setTailoredResume(null)}
+          />
+        )}
       </main>
     </div>
   );

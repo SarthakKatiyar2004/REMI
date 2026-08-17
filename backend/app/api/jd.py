@@ -27,6 +27,7 @@ class JDUploadResponse(BaseModel):
     page_count: int = Field(alias="pageCount")
     extracted_characters: int = Field(alias="extractedCharacters")
     is_text_based: bool = Field(alias="isTextBased")
+    extracted_text: str | None = Field(default=None, alias="extractedText")
 
     message: str
 
@@ -102,5 +103,6 @@ async def upload_jd(
         pageCount=page_count,
         extractedCharacters=extracted_characters,
         isTextBased=is_text_based,
+        extractedText=extracted_text if is_text_based else None,
         message=message,
     )

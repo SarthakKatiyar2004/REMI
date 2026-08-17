@@ -33,15 +33,19 @@ export function useResumeCrud(initialResume: Resume) {
     const [resume, setResume] = useState(initialResume);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
+    const [saveSuccess, setSaveSuccess] = useState(false);
 
     async function saveResume() {
         setIsSaving(true);
         setSaveError(null);
+        setSaveSuccess(false);
 
         try {
             const { id, ...resumePayload } = resume;
             const savedResume = await updateResume(id, resumePayload);
             setResume(savedResume);
+            setSaveSuccess(true);
+            setTimeout(() => setSaveSuccess(false), 3000);
         } catch (error) {
             console.error(error);
             setSaveError("Unable to save resume.");
@@ -367,6 +371,7 @@ export function useResumeCrud(initialResume: Resume) {
         saveResume,
         isSaving,
         saveError,
+        saveSuccess,
 
         updateHeader,
 

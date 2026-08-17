@@ -8,6 +8,7 @@ export interface JDUploadResponse {
     pageCount: number;
     extractedCharacters: number;
     isTextBased: boolean;
+    extractedText?: string;
     message: string;
 }
 

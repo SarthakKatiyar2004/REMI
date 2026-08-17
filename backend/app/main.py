@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.resume import router as resume_router
 from app.api.jd import router as jd_router
+from app.api.tailor import router as tailor_router
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from app.db.database import Base, engine
 import app.models
@@ -27,6 +31,7 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 app.include_router(resume_router)
 app.include_router(jd_router)
+app.include_router(tailor_router)
 
 @app.get("/")
 async def root():
